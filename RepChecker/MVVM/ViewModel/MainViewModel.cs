@@ -15,13 +15,13 @@ namespace RepChecker.MVVM.ViewModel
     {
         private readonly IWindowFactory _windowFactory;
         private readonly TestViewModel _testVM;
-        private ViewModelBase _currentView;
+        private ViewModelBase _currentView = null;
         private bool _isUserLoggedIn = true;
 
         public MainViewModel(ReputationViewModel reputationVM, IWindowFactory windowFactory, TestViewModel testVM)
         {
             ReputationVM = reputationVM;
-            CurrentView = ReputationVM;
+            //CurrentView = ReputationVM;
             _windowFactory = windowFactory;
             _testVM = testVM;
         }
@@ -47,34 +47,70 @@ namespace RepChecker.MVVM.ViewModel
             set
             {
                 _isUserLoggedIn = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsUserLoggedIn));
             }
         }
 
+        public ICommand DisplayReputationPage => new RelayCommand<string>(mode =>
+        {
+            CurrentView = ReputationVM;
+
+            OnPropertyChanged();
+        });
+
         public ICommand ShowExaltedReputations => new RelayCommand<string>(mode =>
         {
-            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Title == "Exalted").ToObservableCollection();
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
 
             OnPropertyChanged();
         });
 
         public ICommand ShowReveredReputations => new RelayCommand<string>(mode =>
         {
-            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Title == "Revered").ToObservableCollection();
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Revered").ToObservableCollection();
+
+            OnPropertyChanged();
+        });
+
+        public ICommand ShowHonoredReputations => new RelayCommand<string>(mode =>
+        {
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Honored").ToObservableCollection();
 
             OnPropertyChanged();
         });
 
         public ICommand ShowFriendlyReputations => new RelayCommand<string>(mode =>
         {
-            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Title == "Friendly").ToObservableCollection();
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Friendly").ToObservableCollection();
 
             OnPropertyChanged();
         });
 
         public ICommand ShowNeutralReputations => new RelayCommand<string>(mode =>
         {
-            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Title == "Neutral").ToObservableCollection();
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Neutral").ToObservableCollection();
+
+            OnPropertyChanged();
+        });
+
+        public ICommand ShowUnfriendlyReputations => new RelayCommand<string>(mode =>
+        {
+            //var test = _windowFactory.GetUserControl<TestView>();
+            //test.DataContext = _testVM;
+            //CurrentView = _testVM;
+
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Unfriendly").ToObservableCollection();
+
+            OnPropertyChanged();
+        });
+
+        public ICommand ShowHostileReputations => new RelayCommand<string>(mode =>
+        {
+            //var test = _windowFactory.GetUserControl<TestView>();
+            //test.DataContext = _testVM;
+            //CurrentView = _testVM;
+
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Hostile").ToObservableCollection();
 
             OnPropertyChanged();
         });
@@ -85,7 +121,7 @@ namespace RepChecker.MVVM.ViewModel
             //test.DataContext = _testVM;
             //CurrentView = _testVM;
 
-            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Title == "Hated").ToObservableCollection();
+            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Hated").ToObservableCollection();
 
             OnPropertyChanged();
         });

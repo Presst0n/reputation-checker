@@ -11,11 +11,11 @@ namespace RepChecker.MVVM.ViewModel
     {
         public ObservableCollection<ReputationModel> TestCollection { get; set; } = new ObservableCollection<ReputationModel>()
         {
-            new ReputationModel { Title = "Chlebaczek" },
-            new ReputationModel { Title = "Chlebaczek" },
-            new ReputationModel { Title = "Chlebaczek" },
-            new ReputationModel { Title = "Chlebaczek" },
-            new ReputationModel { Title = "Chlebaczek" }
+            new ReputationModel { ReputationName = "Chlebaczek" },
+            new ReputationModel { ReputationName = "Chlebaczek" },
+            new ReputationModel { ReputationName = "Chlebaczek" },
+            new ReputationModel { ReputationName = "Chlebaczek" },
+            new ReputationModel { ReputationName = "Chlebaczek" }
         };
     }
 }

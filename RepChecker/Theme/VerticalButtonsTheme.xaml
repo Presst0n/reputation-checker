@@ -30,7 +30,6 @@
             <Setter Property="Background" Value="#03264a"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
-
         </Style.Setters>
 
         <Style.Triggers>
@@ -42,7 +41,6 @@
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" Value="#486B92" />
             </Trigger>
-
         </Style.Triggers>
     </Style>
 

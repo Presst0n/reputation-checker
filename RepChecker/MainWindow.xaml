@@ -7,7 +7,6 @@
         xmlns:viewModel="clr-namespace:RepChecker.MVVM.ViewModel" 
         xmlns:views="clr-namespace:RepChecker.MVVM.View" 
         xmlns:helpers="clr-namespace:RepChecker.Helpers"
-        d:DataContext="{d:DesignInstance Type=viewModel:MainViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="920"
         WindowStyle="None"
@@ -17,16 +16,16 @@
         AllowsTransparency="True"
         MouseDown="Window_MouseDown">
 
-    <Window.Resources>
-        <Style x:Key="NoDataTextBlockStyle" TargetType="TextBlock">
+    <!--<Window.Resources>
+        --><!--<Style x:Key="NoDataTextBlockStyle" TargetType="TextBlock">
             <Setter Property="Visibility" Value="Visible" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsUserLoggedIn}" Value="True">
                     <Setter Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
             </Style.Triggers>
-        </Style>
-    </Window.Resources>
+        </Style>--><!--
+    </Window.Resources>-->
 
     <Border Background="#15181e" CornerRadius="20">
         <Grid>
@@ -69,15 +68,89 @@
                         Margin="0,0,20,0" 
                         Grid.Row="1" 
                         Grid.Column="1">
-                
-                <Button Content="Sign in with Battle.net" Margin="0,0,0,0" 
+
+                <Button x:Name="SignIn"
+                        Content="Sign in with Battle.net" Margin="0,0,0,0" 
                         Width="190"
                         Height="35"                     
                         Foreground="#fff" 
-                        FontSize="12"
-                        Visibility="Visible"
-                        Style="{StaticResource VerticalButtonsTheme}"/>
-                
+                        FontSize="12">
+
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource {x:Type Button}}"
+                               TargetType="{x:Type Button}">
+                            <Style.Setters>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid VerticalAlignment="Stretch"
+                                                  HorizontalAlignment="Stretch"
+                                                  Background="{TemplateBinding Background}">
+
+                                                <Image Source="pack://application:,,,/Theme/Assets/1.png" 
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Center"
+                                                       Margin="15 3 15 0"
+                                                       Width="35" Height="25"/>
+                                                <TextBlock Text="{TemplateBinding Property=Content}"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Right"
+                                                           Margin="15,0,15,0"
+                                                           FontWeight="DemiBold"/>
+
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#03264a"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="Visibility" Value="Collapsed" />
+
+                            </Style.Setters>
+
+                            <Style.Triggers>
+
+                                <DataTrigger Binding="{Binding IsUserLoggedIn}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#2C4561" />
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#486B92" />
+                                </Trigger>
+
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    
+                </Button>
+
+                <TextBlock Text="Hello Nickname!" 
+                           Foreground="#ddcfb9"
+                           FontSize="16"
+                           FontWeight="Regular"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+>
+                    
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource {x:Type TextBlock}}"
+                               TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsUserLoggedIn}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                    
+                </TextBlock>
+
             </StackPanel>
             
              <!--Left navigation menu--> 
@@ -90,7 +163,8 @@
                                              FontSize="14"
                                              x:Name="ReputationsButton"
                                              IsEnabled="{Binding IsUserLoggedIn}"
-                                             Style="{StaticResource MenuButtonTheme}">
+                                             Style="{StaticResource MenuButtonTheme}"
+                                             Command="{Binding DisplayReputationPage}">
                     <RadioButton.Triggers>
 
 
@@ -142,7 +216,7 @@
                                  FontSize="14"
                                  Margin="0 0 0 0"
                                  Style="{StaticResource SubMenuButtonTheme}"
-                                 Command="{Binding ShowReveredReputations}"/>
+                                 Command="{Binding ShowHonoredReputations}"/>
 
                     <RadioButton Content="Friendly" 
                                  Height="30"
@@ -163,14 +237,14 @@
                                  FontSize="14"
                                  Margin="0 0 0 0"
                                  Style="{StaticResource SubMenuButtonTheme}"
-                                 Command="{Binding ShowHatedReputations}"/>
+                                 Command="{Binding ShowUnfriendlyReputations}"/>
 
                     <RadioButton Content="Hostile"
                                  Height="30"
                                  FontSize="14"
                                  Margin="0 0 0 0"
                                  Style="{StaticResource SubMenuButtonTheme}"
-                                 Command="{Binding ShowHatedReputations}"/>
+                                 Command="{Binding ShowHostileReputations}"/>
 
                     <RadioButton Content="Hated"
                                  Height="30"
@@ -192,6 +266,7 @@
 
             </StackPanel>
 
+
             <TextBlock x:Name="NoDataTextBlock"
                        Grid.Row="2" 
                        Grid.Column="1" 
@@ -199,12 +274,24 @@
                        HorizontalAlignment="Center" 
                        Text="No data available. Please log in"
                        Foreground="#ddcfb9"
-                       FontSize="25"
-                       Style="{StaticResource NoDataTextBlockStyle}"/>
+                       FontSize="25">
+                
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsUserLoggedIn}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+
+            </TextBlock>
 
             <ContentControl Grid.Row="2" 
                             Grid.Column="1" 
-                            Margin="10 5 10 10" 
+                            Margin="10 5 20 10" 
                             Content="{Binding CurrentView}">
 
                 <ContentControl.Resources>

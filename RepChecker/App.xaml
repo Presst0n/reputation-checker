@@ -10,11 +10,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/MenuButtonTheme.xaml" />
                 <ResourceDictionary Source="Theme/SubMenuButtonTheme.xaml" />
-                <ResourceDictionary Source="Theme/VerticalButtonsTheme.xaml" />
+                <!--<ResourceDictionary Source="Theme/VerticalButtonsTheme.xaml" />-->
                 <ResourceDictionary Source="Theme/CloseAppButtonTheme.xaml" />
                 <ResourceDictionary Source="Theme/MinimalizeButtonTheme.xaml" />
                 <ResourceDictionary Source="Theme/ScrollBarTheme.xaml"/>
-                
+                <ResourceDictionary Source="Theme/ProgressBarTheme.xaml"/>
+                <ResourceDictionary Source="Theme/ReputationViewTextBlockStyling.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!--<DataTemplate DataType="{x:Type viewModel:ReputationViewModel}">

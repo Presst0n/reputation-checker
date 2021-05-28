@@ -13,57 +13,46 @@ namespace RepChecker.MVVM.ViewModel
 
         private List<ReputationModel> _allReputations = new List<ReputationModel>()
         {
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Hated" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Friendly" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Revered" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Friendly" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Neutral" },
-            new ReputationModel { Title = "Exalted" },
-            new ReputationModel { Title = "Neutral" }
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel() { Character = "Windmixdh", Realm = "Kazzak", ReputationName = "Unshackled",  Standing = new StandingModel 
+            { 
+                CurrentValue = 21000, Level = "Exalted", Max = 21000, Raw = 60000 } 
+            },
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel(),
+            new ReputationModel() { Character = "Windmixdh", Realm = "Kazzak", ReputationName = "Unshackled",  Standing = new StandingModel
+            {
+                CurrentValue = 21000, Level = "Exalted", Max = 21000, Raw = 60000 }
+            },
+            new ReputationModel() { Character = "Windmixhunt", Realm = "Kazzak", ReputationName = "Unshackled",  Standing = new StandingModel
+            {
+                CurrentValue = 21000, Level = "Exalted", Max = 21000, Raw = 60000 }
+            },
+            new ReputationModel() { Character = "Windmixlock", Realm = "Kazzak", ReputationName = "Unshackled",  Standing = new StandingModel
+            {
+                CurrentValue = 21000, Level = "Exalted", Max = 21000, Raw = 60000 }
+            },
         };
 
-        private double _currentValue = 2000;
+        public ReputationModel Reputation { get; set; }
+
+        private double _currentValue = 5500;
         private double _maxRepValue = 6000;
 
         public ReputationViewModel()
         {
 
         }
+
 
         public List<ReputationModel> AllReputations
         {
@@ -104,18 +93,6 @@ namespace RepChecker.MVVM.ViewModel
                 OnPropertyChanged(nameof(MaxRepValue));
             }
         }
-
-
-        //private string colorState = "Transparent";
-        //public string ColorState
-        //{
-        //    get { return colorState; }
-        //    set 
-        //    { 
-        //        colorState = value; 
-        //        OnPropertyChanged("ColorState"); 
-        //    }
-        //}
 
     }
 }
