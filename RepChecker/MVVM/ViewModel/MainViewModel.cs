@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using RepChecker.Extensions;
 
@@ -14,19 +13,16 @@ namespace RepChecker.MVVM.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly IWindowFactory _windowFactory;
-        private readonly TestViewModel _testVM;
         private ViewModelBase _currentView = null;
         private bool _isUserLoggedIn = true;
 
-        public MainViewModel(ReputationViewModel reputationVM, IWindowFactory windowFactory, TestViewModel testVM)
+        public MainViewModel(IWindowFactory windowFactory)
         {
-            ReputationVM = reputationVM;
-            //CurrentView = ReputationVM;
             _windowFactory = windowFactory;
-            _testVM = testVM;
         }
 
         public ReputationViewModel ReputationVM { get; set; }
+        public TestViewModel TestVM { get; set; }
 
         public ViewModelBase CurrentView
         {
@@ -53,14 +49,33 @@ namespace RepChecker.MVVM.ViewModel
 
         public ICommand DisplayReputationPage => new RelayCommand<string>(mode =>
         {
+            if (ReputationVM is null)
+                ReputationVM = _windowFactory.GetViewModel<ReputationViewModel>();
+
+            if (CurrentView == ReputationVM)
+                return;
+            
             CurrentView = ReputationVM;
+
+            OnPropertyChanged();
+        });
+
+        public ICommand DisplayTestPage => new RelayCommand<string>(mode =>
+        {
+            if (TestVM is null)
+                TestVM = _windowFactory.GetViewModel<TestViewModel>();
+
+            if (CurrentView == TestVM)
+                return;
+
+            CurrentView = TestVM;
 
             OnPropertyChanged();
         });
 
         public ICommand ShowExaltedReputations => new RelayCommand<string>(mode =>
         {
-            ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
+            ReputationVM.TestModels = ReputationVM?.AllReputations.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
 
             OnPropertyChanged();
         });
@@ -106,10 +121,6 @@ namespace RepChecker.MVVM.ViewModel
 
         public ICommand ShowHostileReputations => new RelayCommand<string>(mode =>
         {
-            //var test = _windowFactory.GetUserControl<TestView>();
-            //test.DataContext = _testVM;
-            //CurrentView = _testVM;
-
             ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Hostile").ToObservableCollection();
 
             OnPropertyChanged();
@@ -117,10 +128,6 @@ namespace RepChecker.MVVM.ViewModel
 
         public ICommand ShowHatedReputations => new RelayCommand<string>(mode =>
         {
-            //var test = _windowFactory.GetUserControl<TestView>();
-            //test.DataContext = _testVM;
-            //CurrentView = _testVM;
-
             ReputationVM.TestModels = ReputationVM.AllReputations.Where(x => x.Standing.Level == "Hated").ToObservableCollection();
 
             OnPropertyChanged();

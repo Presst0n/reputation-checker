@@ -236,7 +236,7 @@
                                             Orientation="Horizontal" 
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            Margin="10 10 10 0">
+                                            Margin="20 10 10 0">
 
                                     <TextBlock Text="Reputation:" 
                                                Margin="0 0 7 0"
@@ -249,7 +249,7 @@
                                             Orientation="Horizontal" 
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            Margin="10 10 10 0">
+                                            Margin="20 10 10 0">
 
                                     <TextBlock Text="Reputation level:" 
                                                Margin="0 0 7 0"
@@ -262,7 +262,7 @@
                                             Orientation="Horizontal" 
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            Margin="10 10 10 0">
+                                            Margin="20 10 10 0">
 
                                     <TextBlock Text="Realm:" 
                                                Margin="0 0 7 0"
@@ -275,7 +275,7 @@
                                             Orientation="Horizontal" 
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
-                                            Margin="10 10 10 0">
+                                            Margin="20 10 10 0">
 
                                     <TextBlock Text="Character:" 
                                                Margin="0 0 7 0"
@@ -288,7 +288,7 @@
                                             Orientation="Horizontal" 
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Margin="10 0 10 0">
+                                            Margin="20 0 10 0">
 
                                     <TextBlock Text="Progress:" 
                                                Margin="0 0 7 0"

@@ -4,15 +4,13 @@
     <Style TargetType="{x:Type ProgressBar}"
            x:Key="ProgressBarTheme">
         <Style.Setters>
-            <Setter Property="Background" Value="#1c2936"/>
+            <Setter Property="Background" Value="#2e4759"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="Foreground" Value="#57738f" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Width" Value="250" />
             <Setter Property="Height" Value="20" />
-
-
         </Style.Setters>
 
     </Style>

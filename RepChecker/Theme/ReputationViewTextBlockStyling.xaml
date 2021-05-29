@@ -12,11 +12,11 @@
 
         </Style.Setters>
 
-        <Style.Triggers>
+        <!--<Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="#2C4561" />
             </Trigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
 
 </ResourceDictionary>

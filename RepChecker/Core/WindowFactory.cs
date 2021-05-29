@@ -25,5 +25,10 @@ namespace RepChecker.Core
         {
             return (T)_serviceProvider.GetRequiredService(typeof(T));
         }
+
+        public T GetViewModel<T>() where T : ViewModelBase
+        {
+            return (T)_serviceProvider.GetRequiredService(typeof(T));
+        }
     }
 }

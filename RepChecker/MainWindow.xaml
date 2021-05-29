@@ -257,7 +257,8 @@
                 <RadioButton Content="Settings"
                              Height="50"
                              FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"/>
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding DisplayTestPage}"/>
 
                 <RadioButton Content="About"
                              Height="50"
