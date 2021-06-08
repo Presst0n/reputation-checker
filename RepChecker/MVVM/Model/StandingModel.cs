@@ -2,10 +2,10 @@
 {
     public class StandingModel
     {
-        public uint Raw { get; set; } = 15000;
-        public uint Max { get; set; } = 12000;
-        public uint CurrentValue { get; set; } = 6200;
+        public int Raw { get; set; }
+        public int Max { get; set; }
+        public int CurrentValue { get; set; }
         //public uint Tier { get; set; }
-        public string Level { get; set; } = "Revered";
+        public string Level { get; set; }
     }
 }
