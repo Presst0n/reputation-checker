@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RepChecker.MVVM.Model
 {
-    public class Reputations
+    public class ReputationsModel
     {
         public List<ReputationModel> Exalted { get; set; } 
         public List<ReputationModel> Revered { get; set; } 

@@ -18,6 +18,91 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Label Content="Sort:"
+                   Style="{StaticResource HorizontalLabelTheme}"/>
+            <Button Content="A-Z"
+                    Height="20"
+                    FontSize="10"
+                    Style="{StaticResource HorizontalButtonTheme}"
+                    Command="{Binding SortInAlphabeticalOrder}"/>
+            <Label Content="|" Margin="0 0 0 1"
+                   Style="{StaticResource HorizontalLabelTheme}"/>
+            <Button Content="Z-A"
+                    Height="20"
+                    FontSize="10"
+                    Margin="0 0 0 0"
+                    Style="{StaticResource HorizontalButtonTheme}"
+                    Command="{Binding SortInReverseAlphabeticalOrder}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="80" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
+            <Viewbox Height="75" Width="75" VerticalAlignment="Center"
+                     Grid.Column="0" Grid.Row="1">
+                <Viewbox.LayoutTransform>
+                    <RotateTransform Angle="0" />
+                </Viewbox.LayoutTransform>
+
+                <Path x:Name="use55" Fill="#ddcfb9" StrokeThickness="0"
+                      Height="50" 
+                      Canvas.Left="0" 
+                      Stretch="Fill" 
+                      Canvas.Top="0"
+                      Width="100" Margin="0 50 0 0">
+                    <Path.Data>
+                        <StreamGeometry>M10 50A40 40 0 0 0 90 50A40 42 0 0 1 10 50</StreamGeometry>
+                    </Path.Data>
+                    <Path.LayoutTransform>
+                        <RotateTransform Angle="0" />
+                    </Path.LayoutTransform>
+                </Path>
+                <Viewbox.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard x:Name="Spinherio">
+                                        <Storyboard>
+                                            <DoubleAnimation 
+                                                Storyboard.TargetProperty="(LayoutTransform).(RotateTransform.Angle)"
+                                                From="0" To="359" 
+                                                Duration="0:0:1"  RepeatBehavior="Forever"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Viewbox.Style>
+            </Viewbox>
+            <TextBlock Text="Loading" Margin="0 5 0 0" HorizontalAlignment="Center" FontWeight="Light"
+                       Foreground="#ddcfb9" VerticalAlignment="Top" Grid.Row="2" Grid.Column="0"/>
+
+
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDataLoaded}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
+
+
+
+
         <ScrollViewer Grid.Column="0" 
                       Grid.Row="1" 
                       VerticalScrollBarVisibility="Auto" 
@@ -25,167 +110,6 @@
                       Height="450"
                       VerticalAlignment="Top">
 
-            <!--<StackPanel>
-                <Grid x:Name="ReputationItem" Width="auto" Height="65">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <StackPanel Grid.Row="0" Grid.Column="0" 
-                                Orientation="Horizontal" 
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="10 0 10 0">
-                        
-                        <TextBlock Text="Reputation:" 
-                                   Foreground="#ddcfb9" 
-                                   Margin="0 0 7 0"/>
-                        <TextBlock Text="Undercity" 
-                               Foreground="#ddcfb9" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="0" Grid.Column="1" 
-                                Orientation="Horizontal" 
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="10 0 10 0">
-                        
-                        <TextBlock Text="Character:" 
-                                   Foreground="#ddcfb9" 
-                                   Margin="0 0 7 0"/>
-                        <TextBlock Text="Windmixdh" 
-                               Foreground="#ddcfb9" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="0" Grid.Column="2" 
-                                Orientation="Horizontal" 
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="10 0 10 0">
-
-                        <TextBlock Text="Realm:" 
-                                   Foreground="#ddcfb9" 
-                                   Margin="0 0 7 0"/>
-                        <TextBlock Text="Kazzak" 
-                               Foreground="#ddcfb9" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="0" Grid.Column="3" 
-                                Orientation="Horizontal" 
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Margin="10 0 10 0">
-
-                        <TextBlock Text="Reputation level:" 
-                                   Foreground="#ddcfb9" 
-                                   Margin="0 0 7 0"/>
-                        <TextBlock Text="Exalted" 
-                               Foreground="#ddcfb9" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
-                                Orientation="Horizontal" 
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Margin="10 0 10 0">
-
-                        <TextBlock Text="Progress:" 
-                                   Foreground="#ddcfb9" 
-                                   Margin="0 0 7 0"
-                                   VerticalAlignment="Center"/>
-
-                        <Grid>
-                            <ProgressBar Name="ReputationBar"
-                                     Minimum="0" 
-                                     Value="{Binding CurrentRepValue,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
-                                     Maximum="{Binding MaxRepValue,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource ProgressBarTheme}"/>
-
-                            <Grid HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding ElementName=ReputationBar, Path=Value, Mode=OneWay,
-                                     UpdateSourceTrigger=PropertyChanged, 
-                                     StringFormat={}{0:0}/}" 
-                                     FontWeight="DemiBold"
-                                     HorizontalAlignment="Center"
-                                     Foreground="White"
-                                     VerticalAlignment="Center" 
-                                     Background="Transparent"
-                                     Grid.Column="0">
-                                    <TextBlock.Effect>
-                                        <DropShadowEffect ShadowDepth="1"
-                                                      Direction="330"
-                                                      Color="Black"
-                                                      Opacity="0.7"
-                                                      BlurRadius="1"/>
-                                    </TextBlock.Effect>
-                                    <TextBlock.FocusVisualStyle>
-                                        <Style>
-                                            <Setter Property="Control.Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </TextBlock.FocusVisualStyle>
-                                </TextBlock>
-                                <TextBlock Text="{Binding ElementName=ReputationBar, Path=Maximum, Mode=OneWay,
-                                     UpdateSourceTrigger=PropertyChanged, 
-                                     StringFormat={}{0:0}}" 
-                                     FontWeight="DemiBold"
-                                     HorizontalAlignment="Center"
-                                     Foreground="White"
-                                     VerticalAlignment="Center" 
-                                     Background="Transparent"
-                                     Margin="0 0 0 0"
-                                     Grid.Column="1">
-                                    <TextBlock.Effect>
-                                        <DropShadowEffect ShadowDepth="1"
-                                                      Direction="330"
-                                                      Color="Black"
-                                                      Opacity="0.7"
-                                                      BlurRadius="1"
-                                                        />
-                                    </TextBlock.Effect>
-                                    <TextBlock.FocusVisualStyle>
-                                        <Style>
-                                            <Setter Property="Control.Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </TextBlock.FocusVisualStyle>
-                                </TextBlock>
-
-                            </Grid>
-                          
-                        </Grid>
- 
-                       
-                    </StackPanel>
-
-                </Grid>
-                -->
-            <!--<StackPanel Orientation="Horizontal" Height="100">
-                    <TextBlock Text="Reputation:" 
-                           Foreground="#ddcfb9" />
-                    <TextBlock Text="Undercity" 
-                           Foreground="#ddcfb9" />
-                </StackPanel>-->
-            <!--
-
-            </StackPanel>-->
             <ItemsControl ItemsSource="{Binding TestModels}" 
                           AlternationCount="2"
                           Margin="0 0 12 0">
@@ -380,7 +304,16 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
+            <ScrollViewer.Style>
+                <Style TargetType="ScrollViewer">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDataLoaded}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Style>
         </ScrollViewer>
     </Grid>
 

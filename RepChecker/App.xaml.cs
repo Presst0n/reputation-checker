@@ -8,6 +8,12 @@ using RepChecker.MVVM.ViewModel;
 using System;
 using System.Configuration;
 using System.Windows;
+using RepChecker.Data;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using System.Reflection;
+using RepChecker.Repository;
+using RepChecker.Services;
 
 namespace RepChecker
 {
@@ -43,17 +49,34 @@ namespace RepChecker
 
         private ServiceCollection AddDependencies(ServiceCollection services)
         {
-            var apiClient = ConfigureApiClient();
+            //var apiClient = ConfigureApiClient();
 
             services.AddSingleton(this);
-            services.AddSingleton<LoggedInUserModel>();
-            services.AddSingleton(apiClient);
-            services.AddTransient<MainWindow>();
-            services.AddTransient<TestView>();
-            services.AddTransient<TestViewModel>();
-            services.AddTransient<IWindowFactory, WindowFactory>();
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<ReputationViewModel>();
+            services.AddScoped<LoggedInUserModel>();
+            services.AddScoped<IApiService, ApiService>();
+            services.AddScoped<MainWindow>();
+            services.AddScoped<TestView>();
+            services.AddScoped<TestViewModel>();
+            services.AddScoped<IWindowFactory, WindowFactory>();
+            services.AddScoped<MainViewModel>();
+            services.AddScoped<ReputationViewModel>();
+            services.AddScoped<IStandingsRepository, StandingsRepository>();
+
+            //services.AddDbContext<ReputationDbContext>(options => 
+            //{
+            //    options.UseSqlite("Data Source = reputations.db");
+            //});
+
+            //var config = new MapperConfiguration(cfg =>
+            //{
+            //    cfg.AddMaps(Assembly.GetExecutingAssembly());
+            //});
+            //IMapper mapper = new Mapper(config);
+
+            services.AddDbContext<ReputationDbContext>(ServiceLifetime.Scoped);
+            //services.AddSingleton(mapper);
+            services.AddAutoMapper(typeof(App));
+
 
             return services;
         }

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepChecker", "RepChecker\RepChecker.csproj", "{FE509D8D-B04E-49E0-A0B9-EFBB4255D665}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepDataCollector", "ApiRestClient\RepDataCollector.csproj", "{ABC2279A-8E0A-4C48-966F-108D7FF1AD5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepDataCollector", "RepDataCollector\RepDataCollector.csproj", "{7761ABB2-8626-467D-8B52-4E7631A40386}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{FE509D8D-B04E-49E0-A0B9-EFBB4255D665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE509D8D-B04E-49E0-A0B9-EFBB4255D665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE509D8D-B04E-49E0-A0B9-EFBB4255D665}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ABC2279A-8E0A-4C48-966F-108D7FF1AD5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABC2279A-8E0A-4C48-966F-108D7FF1AD5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABC2279A-8E0A-4C48-966F-108D7FF1AD5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABC2279A-8E0A-4C48-966F-108D7FF1AD5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7761ABB2-8626-467D-8B52-4E7631A40386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7761ABB2-8626-467D-8B52-4E7631A40386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7761ABB2-8626-467D-8B52-4E7631A40386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7761ABB2-8626-467D-8B52-4E7631A40386}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

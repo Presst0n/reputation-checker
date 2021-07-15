@@ -1,4 +1,5 @@
-﻿using RepChecker.MVVM.ViewModel;
+﻿using RepChecker.Interfaces;
+using RepChecker.MVVM.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,26 @@ namespace RepChecker
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(/*MainViewModel mainViewModel*/)
+        public MainWindow()
         {
             InitializeComponent();
-            //DataContext = mainViewModel;
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is IWindowBehaviour vm)
+            {
+                vm.Close += () =>
+                {
+                    this.Close();
+                };
+
+                vm.Minimize += () =>
+                {
+                    this.WindowState = WindowState.Minimized;
+                };
+            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
