@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="RepChecker.MVVM.View.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RepChecker.MVVM.View"
+             xmlns:enumBinder="clr-namespace:RepChecker.Extensions"
+             xmlns:enums="clr-namespace:RepChecker.Enums"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <Label Content="Application" Foreground="#ddcfb9" 
+                   FontSize="20"
+                   HorizontalAlignment="Center" />
+            <DockPanel Margin="100 0 100 0" Width="auto" Height="30" 
+                       HorizontalAlignment="Stretch">
+                <Label Content="Color Theme" FontSize="15" Foreground="#ddcfb9" 
+                       HorizontalAlignment="Left" />
+                
+                <ItemsControl HorizontalAlignment="Right">
+
+                        <ComboBox FontSize="15" Foreground="#ddcfb9" VerticalAlignment="Center" 
+                          Padding="65 0 0 0" Width="100" IsHitTestVisible="True"
+                          HorizontalAlignment="Right" ScrollViewer.CanContentScroll="False"
+                          Style="{StaticResource ComboBoxFlatStyle}"
+                          SelectedIndex="1">
+                            
+                        <!--<ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ComboBox.ItemContainerStyle>-->
+                            <ComboBoxItem>theme 1</ComboBoxItem>
+                            <ComboBoxItem>theme 2</ComboBoxItem>
+                            <ComboBoxItem>theme 3</ComboBoxItem>
+                        </ComboBox>
+
+                </ItemsControl>
+            </DockPanel>
+
+            <DockPanel Margin="100 10 100 0" Width="auto" Height="30" 
+                       HorizontalAlignment="Stretch">
+                <Label Content="Data Refresh" FontSize="15" Foreground="#ddcfb9" 
+                       HorizontalAlignment="Left" />
+
+                <ItemsControl HorizontalAlignment="Right">
+
+                    <ComboBox FontSize="15" Foreground="#ddcfb9" VerticalAlignment="Center" 
+                              Padding="65 0 0 0" Width="100" IsHitTestVisible="True"
+                              HorizontalAlignment="Right" ScrollViewer.CanContentScroll="False"
+                              Style="{StaticResource ComboBoxFlatStyle}"
+                              DisplayMemberPath="Name"
+                              ItemsSource="{Binding RefreshTimeSpan}"    
+                              SelectedItem="{Binding SelectedRefreshTimeSpan}"
+                              SelectedIndex="1">
+
+                        <!--<ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ComboBox.ItemContainerStyle>-->
+                        <!--<ComboBoxItem>Every 30min</ComboBoxItem>
+                        <ComboBoxItem>Every 1h</ComboBoxItem>
+                        <ComboBoxItem>Every 2h</ComboBoxItem>                        
+                        <ComboBoxItem>Every 3h</ComboBoxItem>-->
+                    </ComboBox>
+
+                </ItemsControl>
+            </DockPanel>
+
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <!--<Label Content="" Foreground="#ddcfb9" 
+                   FontSize="20"
+                   HorizontalAlignment="Center" />-->
+        </StackPanel>
+    </Grid>
+</UserControl>

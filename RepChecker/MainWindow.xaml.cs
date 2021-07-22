@@ -34,12 +34,13 @@ namespace RepChecker
             {
                 vm.Close += () =>
                 {
-                    this.Close();
+                    Close();
                 };
 
                 vm.Minimize += () =>
                 {
-                    this.WindowState = WindowState.Minimized;
+                    WindowState = WindowState.Minimized;
+                    //AppBorder.Background = new SolidColorBrush(Color.FromRgb(38, 9, 48)); 
                 };
             }
         }

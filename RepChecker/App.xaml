@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="Theme/ProgressBarTheme.xaml"/>
                 <ResourceDictionary Source="Theme/ReputationViewTextBlockStyling.xaml"/>
                 <ResourceDictionary Source="Theme/HorizontalLabelTheme.xaml"/>
+                <ResourceDictionary Source="Theme/ComboBoxTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!--<DataTemplate DataType="{x:Type viewModel:ReputationViewModel}">

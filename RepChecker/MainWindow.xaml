@@ -8,10 +8,10 @@
         xmlns:views="clr-namespace:RepChecker.MVVM.View" 
         xmlns:helpers="clr-namespace:RepChecker.Helpers"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="920"
+        Title="MainWindow" Height="600" Width="920" MinHeight="600" MinWidth="920"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip"
         Background="Transparent"
         AllowsTransparency="True"
         MouseDown="Window_MouseDown">
@@ -27,7 +27,7 @@
         </Style>--><!--
     </Window.Resources>-->
 
-    <Border Background="#15181e" CornerRadius="20">
+    <Border x:Name="AppBorder" Background="#15181e" CornerRadius="20 20 0 20">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -269,7 +269,7 @@
                              Height="50"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding DisplayTestPage}"/>
+                             Command="{Binding DisplaySettingsPage}"/>
 
                 <RadioButton Content="About"
                              Height="50"
@@ -279,7 +279,7 @@
             </StackPanel>
 
 
-            <TextBlock x:Name="NoDataTextBlock"
+            <!--<TextBlock x:Name="NoDataTextBlock"
                        Grid.Row="2" 
                        Grid.Column="1" 
                        VerticalAlignment="Center"
@@ -299,7 +299,7 @@
                     </Style>
                 </TextBlock.Style>
 
-            </TextBlock>
+            </TextBlock>-->
 
             <ContentControl Grid.Row="2" 
                             Grid.Column="1" 
@@ -310,8 +310,8 @@
                     <DataTemplate DataType="{x:Type viewModel:ReputationViewModel}">
                         <views:ReputationView />
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type viewModel:TestViewModel}">
-                        <views:TestView />
+                    <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+                        <views:SettingsView />
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>

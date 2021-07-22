@@ -39,16 +39,30 @@ namespace RepChecker.MVVM.ViewModel
         private ObservableCollection<ReputationModel> _testModels;
         private readonly IApiService _apiService;
         private List<ReputationModel> _reputationsCollection;
-        private ReputationDbContext _dbContext;
         private readonly IStandingsRepository _standingsRepository;
         private bool _isDataLoaded;
+        private string _reputationsNumber;
 
-        public ReputationViewModel(IApiService apiService, ReputationDbContext dbContext, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser)
+        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser)
         {
             _apiService = apiService;
-            _dbContext = dbContext;
             _standingsRepository = standingsRepository;
             _loggedInUser = loggedInUser;
+        }
+        // TODO: Implement changing colors in app based on chosen theme by user.
+        // TODO: Make application settings and store them somewhere (e.g. in appData). 
+        // TODO: Implement feature that allows user for searching reputation by typing its name in simple textbox.
+        // TODO: Create general validation, so that user will get notified when some functions of applications are not available for some reason or error occured.
+        // TODO: Need to implement logging to file (maybe .txt) system . I will prolly use some well written and respected 3rd party library (nlog/serilog?).
+
+        public string ReputationsNumber
+        {
+            get => _reputationsNumber;
+            set 
+            {
+                _reputationsNumber = value == null ? "0" : value;
+                OnPropertyChanged();
+            }
         }
 
         public List<ReputationModel> ReputationsCollection
@@ -77,6 +91,7 @@ namespace RepChecker.MVVM.ViewModel
             set
             {
                 _testModels = value;
+                ReputationsNumber = _testModels?.Count.ToString();
                 OnPropertyChanged();
             }
         }
@@ -165,38 +180,9 @@ namespace RepChecker.MVVM.ViewModel
 
         public async Task LoadReputations()
         {
-            // Check if reputations of this user exist in database and if so, check if they are older than 4hrs. 
+            // Check if reputations of this user exist in database and if so, check if they are older than x hrs. 
             // If that's false then load them instead requesting API. Otherwise get new data from api. 
 
-            // Validation here needed.
-            //await _standingsRepository.SaveDataAsync(new ApplicationUserModel()
-            //{
-            //    BattleTag = "Vlad#5623",
-            //    Id = GenerateId(),
-            //    UserReputations = new List<ReputationModel>() 
-            //    {
-            //        new ReputationModel()
-            //        {
-            //            BattleTag = "Vlad#5623",
-            //            Character = "Vladzioszek",
-            //            FactionHref = "https://www.something.com",
-            //            Realm = "TwistingNether",
-            //            ReputationId = GenerateId(),
-            //            ReputationName = "PlaceHolder",
-            //            Standing = new StandingModel()
-            //            {
-            //                CurrentValue = 21000,
-            //                Level = "Exalted",
-            //                ReputationId = 133,
-            //                Max = 21000,
-            //                Raw = 45000,
-            //                StandingId = GenerateId(),
-            //                Tier = 7
-            //            }
-            //        }
-            //    },
-            //    LastUpdate = DateTime.UtcNow.ToLocalTime().ToString()
-            //});
 
             var data = await _standingsRepository.LoadDataAsync(_loggedInUser.BattleTag);
 
@@ -208,7 +194,6 @@ namespace RepChecker.MVVM.ViewModel
                     return;
 
                 ReputationsCollection = reps;
-                // Maybe I should parse DateTime to string in repository or while mapping with automapper.
                 try
                 {
                     await _standingsRepository.SaveDataAsync(new ApplicationUserModel()
@@ -225,7 +210,6 @@ namespace RepChecker.MVVM.ViewModel
                     throw ex;
                 }
 
-                //var date = DateTime.Parse(DateTime.UtcNow.ToLocalTime().ToString());
                 IsDataLoaded = true;
                 OnLoadingReputationsCompleted?.Invoke(this, true);
                 return;

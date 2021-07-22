@@ -22,5 +22,17 @@ namespace RepChecker.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:30:00")]
+        public global::System.TimeSpan DataRefresh {
+            get {
+                return ((global::System.TimeSpan)(this["DataRefresh"]));
+            }
+            set {
+                this["DataRefresh"] = value;
+            }
+        }
     }
 }

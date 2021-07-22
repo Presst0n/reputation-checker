@@ -56,7 +56,8 @@ namespace RepChecker
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<MainWindow>();
             services.AddScoped<TestView>();
-            services.AddScoped<TestViewModel>();
+            services.AddScoped<SettingsView>();
+            services.AddScoped<SettingsViewModel>();
             services.AddScoped<IWindowFactory, WindowFactory>();
             services.AddScoped<MainViewModel>();
             services.AddScoped<ReputationViewModel>();

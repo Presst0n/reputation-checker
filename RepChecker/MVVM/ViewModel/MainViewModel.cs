@@ -39,7 +39,7 @@ namespace RepChecker.MVVM.ViewModel
         }
 
         public ReputationViewModel ReputationVM { get; set; }
-        public TestViewModel TestVM { get; set; }
+        public SettingsViewModel SettingsVM { get; set; }
 
         public ViewModelBase CurrentView
         {
@@ -89,7 +89,6 @@ namespace RepChecker.MVVM.ViewModel
             }
         }
 
-
         public ICommand MinimizeApp => new RelayCommand<string>(mode =>
         {
             MinimizeApplication();
@@ -102,7 +101,6 @@ namespace RepChecker.MVVM.ViewModel
 
         public ICommand LogIn => new RelayCommand<string>(mode =>
         {
-            // TODO - Handle logging via battle.net
             var result = AsyncContext.Run(_apiService.AuthorizeAsync);
 
             if (!result)
@@ -134,17 +132,17 @@ namespace RepChecker.MVVM.ViewModel
             OnPropertyChanged();
         });
 
-        public ICommand DisplayTestPage => new RelayCommand<string>(mode =>
+        public ICommand DisplaySettingsPage => new RelayCommand<string>(mode =>
         {
-            //if (TestVM is null)
-            //    TestVM = _windowFactory.GetViewModel<TestViewModel>();
+            if (SettingsVM is null)
+                SettingsVM = _windowFactory.GetViewModel<SettingsViewModel>();
 
-            //if (CurrentView == TestVM)
-            //    return;
+            if (CurrentView == SettingsVM)
+                return;
 
-            //CurrentView = TestVM;
+            CurrentView = SettingsVM;
 
-            //OnPropertyChanged();
+            OnPropertyChanged();
         });
 
         public ICommand ShowExaltedReputations => new RelayCommand<string>(mode =>
