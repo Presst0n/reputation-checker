@@ -17,11 +17,13 @@ namespace RepChecker.Settings
         public void SetDataRefreshValue(TimeSpan timeSpan)
         {
             Properties.Settings.Default.DataRefresh = timeSpan;
+            Properties.Settings.Default.Save();
         }
 
         public void RestoreDefaultSettings()
         {
             Properties.Settings.Default.DataRefresh = TimeSpan.FromMinutes(30);
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -4,6 +4,7 @@ using RepChecker.MVVM.Model;
 using RepChecker.Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RepChecker.MVVM.ViewModel
@@ -25,7 +26,15 @@ namespace RepChecker.MVVM.ViewModel
 
         public RefreshTimeModel SelectedRefreshTimeSpan
         {
-            get => _selectedRefreshTimeSpan;
+            get
+            {
+                if (_selectedRefreshTimeSpan is null)
+                {
+                    return RefreshTimeSpan.First(x => x.RefreshmentTime == _applicationSettings.GetDataRefreshValue());
+                }
+
+                return _selectedRefreshTimeSpan;
+            }
             set 
             {
                 _selectedRefreshTimeSpan = value;
@@ -35,11 +44,9 @@ namespace RepChecker.MVVM.ViewModel
             }
         }
 
-
         public SettingsViewModel(IApplicationSettings applicationSettings)
         {
             _applicationSettings = applicationSettings;
         }
-
     }
 }
