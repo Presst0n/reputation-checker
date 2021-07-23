@@ -14,6 +14,7 @@ using AutoMapper;
 using System.Reflection;
 using RepChecker.Repository;
 using RepChecker.Services;
+using RepChecker.Settings;
 
 namespace RepChecker
 {
@@ -53,6 +54,7 @@ namespace RepChecker
 
             services.AddSingleton(this);
             services.AddScoped<LoggedInUserModel>();
+            services.AddScoped<IApplicationSettings, ApplicationSettings>();
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<MainWindow>();
             services.AddScoped<TestView>();

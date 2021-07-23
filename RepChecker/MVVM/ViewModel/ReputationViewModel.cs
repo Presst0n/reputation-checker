@@ -9,6 +9,7 @@ using RepChecker.Extensions;
 using RepChecker.MVVM.Model;
 using RepChecker.Repository;
 using RepChecker.Services;
+using RepChecker.Settings;
 using RepDataCollector.Core;
 using RepDataCollector.Models.Responses;
 using System;
@@ -42,12 +43,14 @@ namespace RepChecker.MVVM.ViewModel
         private readonly IStandingsRepository _standingsRepository;
         private bool _isDataLoaded;
         private string _reputationsNumber;
+        private readonly IApplicationSettings _userAppSettings;
 
-        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser)
+        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, IApplicationSettings userAppSettings)
         {
             _apiService = apiService;
             _standingsRepository = standingsRepository;
             _loggedInUser = loggedInUser;
+            _userAppSettings = userAppSettings;
         }
         // TODO: Implement changing colors in app based on chosen theme by user.
         // TODO: Make application settings and store them somewhere (e.g. in appData). 
@@ -171,6 +174,7 @@ namespace RepChecker.MVVM.ViewModel
 
         private int GenerateId()
         {
+            // Extract this into extension method.
             var now = DateTime.Now;
             var zeroDate = DateTime.MinValue.AddHours(now.Hour).AddMinutes(now.Minute).AddSeconds(now.Second).AddMilliseconds(now.Millisecond);
             int uniqueId = (int)(zeroDate.Ticks / 10000);
@@ -194,6 +198,7 @@ namespace RepChecker.MVVM.ViewModel
                     return;
 
                 ReputationsCollection = reps;
+
                 try
                 {
                     await _standingsRepository.SaveDataAsync(new ApplicationUserModel()
@@ -215,7 +220,7 @@ namespace RepChecker.MVVM.ViewModel
                 return;
             }
 
-            if (DateTime.Now >= DateTime.Parse(data.LastUpdate).AddHours(1))
+            if (DateTime.Now >= DateTime.Parse(data.LastUpdate).Add(_userAppSettings.GetDataRefreshValue()))
             {
                 var reps = await LoadReputationsDataFromApi();
                 ReputationsCollection = reps;
