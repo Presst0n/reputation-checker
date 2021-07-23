@@ -1,4 +1,4 @@
-**REP CHECKER**
+# REP CHECKER
 More detailed description will be added soon. 
 
 ![Splash-Screen](https://i.ibb.co/1Rmt0mr/splash-screen-prototype.png)
