@@ -1,5 +1,5 @@
 # REP CHECKER
-It's a small app for checking reputation on all yours characters in World of Warcraft. 
+It's a small app for checking reputations on all yours characters in World of Warcraft. 
 More detailed description will be added soon. 
 
 <div>
