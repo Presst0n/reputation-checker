@@ -18,6 +18,8 @@ namespace RepChecker.MVVM.ViewModel
         private ViewModelBase _currentView = null;
         private LoggedInUserModel _loggedInUserModel;
 
+        public event EventHandler<string> OnReputationFilter;
+
         public MainViewModel(IWindowFactory windowFactory, LoggedInUserModel loggedInUser, IApiService apiService)
         {
             LoggedInUserModel = loggedInUser;
@@ -147,94 +149,65 @@ namespace RepChecker.MVVM.ViewModel
 
         public ICommand ShowExaltedReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-            var filteredCollection = ReputationVM?.ReputationsCollection.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            //if (ReputationVM?.ReputationsCollection is null)
+            //    return;
+            //var filteredCollection = ReputationVM?.ReputationsCollection.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
+            //ReputationVM.TestModels = filteredCollection;
+
+            OnReputationFilter?.Invoke(this, "Exalted");
 
             OnPropertyChanged();
         });
 
         public ICommand ShowReveredReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Revered").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            OnReputationFilter?.Invoke(this, "Revered");
 
             OnPropertyChanged();
         });
 
         public ICommand ShowHonoredReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Honored").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            OnReputationFilter?.Invoke(this, "Honored");
 
             OnPropertyChanged();
         });
 
         public ICommand ShowFriendlyReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Friendly").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            OnReputationFilter?.Invoke(this, "Friendly");
 
             OnPropertyChanged();
         });
 
         public ICommand ShowNeutralReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Neutral").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            OnReputationFilter?.Invoke(this, "Neutral");
 
             OnPropertyChanged();
         });
 
         public ICommand ShowUnfriendlyReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-
-            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Unfriendly").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            OnReputationFilter?.Invoke(this, "Unfriendly");
 
             OnPropertyChanged();
         });
 
         public ICommand ShowHostileReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Hostile").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            OnReputationFilter?.Invoke(this, "Hostile");
 
             OnPropertyChanged();
         });
 
         public ICommand ShowHatedReputations => new RelayCommand<string>(mode =>
         {
-            if (ReputationVM?.ReputationsCollection is null)
-                return;
-            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Hated").ToObservableCollection();
-            ReputationVM.TestModels = filteredCollection;
-            ReputationVM.TestModelsBackUp = filteredCollection;
+            OnReputationFilter?.Invoke(this, "Hated");
 
             OnPropertyChanged();
         });
 
-        
         public void CloseApplication()
         {
             Close?.Invoke();

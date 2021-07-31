@@ -44,16 +44,28 @@ namespace RepChecker.MVVM.ViewModel
         private bool _isDataLoaded;
         private string _reputationsNumber;
         private readonly IApplicationSettings _userAppSettings;
+        private readonly MainViewModel _mainViewModel;
+
         public string ChosenReputationLvl { get; set; }
 
-        public ObservableCollection<ReputationModel> TestModelsBackUp { get; set; }
-
-        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, IApplicationSettings userAppSettings)
+        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, IApplicationSettings userAppSettings, MainViewModel mainViewModel)
         {
             _apiService = apiService;
             _standingsRepository = standingsRepository;
             _loggedInUser = loggedInUser;
             _userAppSettings = userAppSettings;
+            _mainViewModel = mainViewModel;
+
+            _mainViewModel.OnReputationFilter += (obj, e) => 
+            {
+                ChosenReputationLvl = e;
+
+                if (ReputationsCollection is null)
+                    return;
+
+                var filteredCollection = ReputationsCollection.Where(x => x.Standing.Level == e).ToObservableCollection();
+                TestModels = filteredCollection;
+            };
         }
         // TODO: Implement changing colors in app based on chosen theme by user.
         // TODO: Make application settings and store them somewhere (e.g. in appData). 
@@ -125,10 +137,6 @@ namespace RepChecker.MVVM.ViewModel
             set
             {
                 _testModels = value;
-                if (_testModels.Count != 0)
-                {
-                    ChosenReputationLvl = _testModels.FirstOrDefault().Standing.Level;
-                }
                 ReputationsNumber = _testModels?.Count.ToString();
                 OnPropertyChanged();
             }
