@@ -44,6 +44,9 @@ namespace RepChecker.MVVM.ViewModel
         private bool _isDataLoaded;
         private string _reputationsNumber;
         private readonly IApplicationSettings _userAppSettings;
+        public string ChosenReputationLvl { get; set; }
+
+        public ObservableCollection<ReputationModel> TestModelsBackUp { get; set; }
 
         public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, IApplicationSettings userAppSettings)
         {
@@ -57,6 +60,34 @@ namespace RepChecker.MVVM.ViewModel
         // TODO: Implement feature that allows user for searching reputation by typing its name in simple textbox.
         // TODO: Create general validation, so that user will get notified when some functions of applications are not available for some reason or error occured.
         // TODO: Need to implement logging to file (maybe .txt) system . I will prolly use some well written and respected 3rd party library (nlog/serilog?).
+
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value?.ToLowerInvariant();
+                //_reputationsCollection.Where(e => e.Standing.Level == TestModels.FirstOrDefault().Standing.Level).Where(x => x.ReputationName.Contains(_searchText)).ToObservableCollection();
+                if (TestModels is null)
+                    return;
+                //if (TestModels.Count == 0)
+
+
+                /*_reputationsCollection.Where(e => e.Standing.Level == TestModels.FirstOrDefault()?.Standing.Level);*/
+                if (_searchText == "")
+                {
+                    TestModels = _reputationsCollection.Where(e => e.Standing.Level == ChosenReputationLvl).ToObservableCollection();
+                    OnPropertyChanged();
+                    return;
+                }
+
+                var filteredData = _reputationsCollection.Where(e => e.Standing.Level == ChosenReputationLvl).Where(x => x.ReputationName.ToLowerInvariant().Contains(_searchText)).ToObservableCollection(); 
+
+                TestModels = filteredData;
+                OnPropertyChanged();
+            }
+        }
 
         public string ReputationsNumber
         {
@@ -94,6 +125,10 @@ namespace RepChecker.MVVM.ViewModel
             set
             {
                 _testModels = value;
+                if (_testModels.Count != 0)
+                {
+                    ChosenReputationLvl = _testModels.FirstOrDefault().Standing.Level;
+                }
                 ReputationsNumber = _testModels?.Count.ToString();
                 OnPropertyChanged();
             }
@@ -128,6 +163,9 @@ namespace RepChecker.MVVM.ViewModel
 
                 foreach (var rep in response.Reputations)
                 {
+                    if (rep.Faction.Name == "Guild")
+                        continue;
+
                     var repModel = new ReputationModel
                     {
                         ReputationName = rep.Faction.Name,

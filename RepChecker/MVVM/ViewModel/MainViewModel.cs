@@ -25,6 +25,9 @@ namespace RepChecker.MVVM.ViewModel
             _windowFactory = windowFactory;
         }
 
+
+
+
         public Action Close { get; set; }
         public Action Minimize { get; set; }
 
@@ -149,7 +152,9 @@ namespace RepChecker.MVVM.ViewModel
         {
             if (ReputationVM?.ReputationsCollection is null)
                 return;
-            ReputationVM.TestModels = ReputationVM?.ReputationsCollection.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
+            var filteredCollection = ReputationVM?.ReputationsCollection.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });
@@ -158,7 +163,9 @@ namespace RepChecker.MVVM.ViewModel
         {
             if (ReputationVM?.ReputationsCollection is null)
                 return;
-            ReputationVM.TestModels = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Revered").ToObservableCollection();
+            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Revered").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });
@@ -167,7 +174,9 @@ namespace RepChecker.MVVM.ViewModel
         {
             if (ReputationVM?.ReputationsCollection is null)
                 return;
-            ReputationVM.TestModels = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Honored").ToObservableCollection();
+            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Honored").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });
@@ -176,7 +185,9 @@ namespace RepChecker.MVVM.ViewModel
         {
             if (ReputationVM?.ReputationsCollection is null)
                 return;
-            ReputationVM.TestModels = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Friendly").ToObservableCollection();
+            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Friendly").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });
@@ -185,7 +196,9 @@ namespace RepChecker.MVVM.ViewModel
         {
             if (ReputationVM?.ReputationsCollection is null)
                 return;
-            ReputationVM.TestModels = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Neutral").ToObservableCollection();
+            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Neutral").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });
@@ -195,8 +208,9 @@ namespace RepChecker.MVVM.ViewModel
             if (ReputationVM?.ReputationsCollection is null)
                 return;
 
-
-            ReputationVM.TestModels = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Unfriendly").ToObservableCollection();
+            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Unfriendly").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });
@@ -205,7 +219,9 @@ namespace RepChecker.MVVM.ViewModel
         {
             if (ReputationVM?.ReputationsCollection is null)
                 return;
-            ReputationVM.TestModels = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Hostile").ToObservableCollection();
+            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Hostile").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });
@@ -214,7 +230,9 @@ namespace RepChecker.MVVM.ViewModel
         {
             if (ReputationVM?.ReputationsCollection is null)
                 return;
-            ReputationVM.TestModels = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Hated").ToObservableCollection();
+            var filteredCollection = ReputationVM.ReputationsCollection.Where(x => x.Standing.Level == "Hated").ToObservableCollection();
+            ReputationVM.TestModels = filteredCollection;
+            ReputationVM.TestModelsBackUp = filteredCollection;
 
             OnPropertyChanged();
         });

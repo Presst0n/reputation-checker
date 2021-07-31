@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:RepChecker"
+             xmlns:converters="clr-namespace:RepChecker.Converters"
              xmlns:viewModel="clr-namespace:RepChecker.MVVM.ViewModel"
              xmlns:view="clr-namespace:RepChecker.MVVM.View">
     <Application.Resources>
@@ -18,6 +19,8 @@
                 <ResourceDictionary Source="Theme/ReputationViewTextBlockStyling.xaml"/>
                 <ResourceDictionary Source="Theme/HorizontalLabelTheme.xaml"/>
                 <ResourceDictionary Source="Theme/ComboBoxTheme.xaml"/>
+                <ResourceDictionary Source="Theme/TextBoxTheme.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
 
             <!--<DataTemplate DataType="{x:Type viewModel:ReputationViewModel}">
