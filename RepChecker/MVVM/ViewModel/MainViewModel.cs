@@ -25,9 +25,6 @@ namespace RepChecker.MVVM.ViewModel
             _windowFactory = windowFactory;
         }
 
-
-
-
         public Action Close { get; set; }
         public Action Minimize { get; set; }
 
