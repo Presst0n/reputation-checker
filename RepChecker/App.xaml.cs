@@ -32,7 +32,7 @@ namespace RepChecker
 
             try
             {
-                mainWindow.DataContext = serviceProvider.GetRequiredService<MainViewModel>();
+                mainWindow.DataContext = serviceProvider.GetRequiredService<IMainViewModel>();
                 mainWindow.Show();
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace RepChecker
             services.AddScoped<SettingsView>();
             services.AddScoped<SettingsViewModel>();
             services.AddScoped<IWindowFactory, WindowFactory>();
-            services.AddScoped<MainViewModel>();
+            services.AddScoped<IMainViewModel, MainViewModel>();
             services.AddScoped<ReputationViewModel>();
             services.AddScoped<IStandingsRepository, StandingsRepository>();
 
@@ -82,13 +82,6 @@ namespace RepChecker
 
 
             return services;
-        }
-
-        private BattleNetApiRequestsHandler ConfigureApiClient()
-        {
-            var clientId = ConfigurationManager.AppSettings.Get("BlizzardApiId");
-            var clientSecret = ConfigurationManager.AppSettings.Get("BlizzardApiPassword");
-            return new BattleNetApiRequestsHandler(clientId, clientSecret);
         }
     }
 }

@@ -44,11 +44,9 @@ namespace RepChecker.MVVM.ViewModel
         private bool _isDataLoaded;
         private string _reputationsNumber;
         private readonly IApplicationSettings _userAppSettings;
-        private readonly MainViewModel _mainViewModel;
+        private readonly IMainViewModel _mainViewModel;
 
-        public string ChosenReputationLvl { get; set; }
-
-        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, IApplicationSettings userAppSettings, MainViewModel mainViewModel)
+        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, IApplicationSettings userAppSettings, IMainViewModel mainViewModel)
         {
             _apiService = apiService;
             _standingsRepository = standingsRepository;
@@ -67,13 +65,15 @@ namespace RepChecker.MVVM.ViewModel
                 TestModels = filteredCollection;
             };
         }
+
         // TODO: Implement changing colors in app based on chosen theme by user.
-        // TODO: Make application settings and store them somewhere (e.g. in appData). 
-        // TODO: Implement feature that allows user for searching reputation by typing its name in simple textbox.
         // TODO: Create general validation, so that user will get notified when some functions of applications are not available for some reason or error occured.
         // TODO: Need to implement logging to file (maybe .txt) system . I will prolly use some well written and respected 3rd party library (nlog/serilog?).
 
+        public string ChosenReputationLvl { get; set; }
+
         private string _searchText;
+
         public string SearchText
         {
             get => _searchText;
@@ -202,7 +202,6 @@ namespace RepChecker.MVVM.ViewModel
         private async Task<List<ReputationModel>> LoadReputationsDataFromApi()
         {
             var characters = await _apiService.GetAllUserWowCharactersAsync();
-
             if (characters is null)
                 return null;
 

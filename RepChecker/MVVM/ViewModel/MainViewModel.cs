@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace RepChecker.MVVM.ViewModel
 {
-    public class MainViewModel : ViewModelBase, IWindowBehaviour
+    public class MainViewModel : ViewModelBase, IWindowBehaviour, IMainViewModel
     {
         private readonly IWindowFactory _windowFactory;
         private readonly IApiService _apiService;
@@ -30,7 +30,7 @@ namespace RepChecker.MVVM.ViewModel
         public Action Close { get; set; }
         public Action Minimize { get; set; }
 
-        public LoggedInUserModel LoggedInUserModel 
+        public LoggedInUserModel LoggedInUserModel
         {
             get => _loggedInUserModel;
             set
@@ -70,9 +70,9 @@ namespace RepChecker.MVVM.ViewModel
 
         public bool RepButtonVisible
         {
-            get => _repButtonVisible; 
-            set 
-            { 
+            get => _repButtonVisible;
+            set
+            {
                 _repButtonVisible = value;
                 OnPropertyChanged();
             }
@@ -130,7 +130,7 @@ namespace RepChecker.MVVM.ViewModel
             Task.Run(async () => await ReputationVM.LoadReputations());
 
             CurrentView = ReputationVM;
-            
+
             OnPropertyChanged();
         });
 

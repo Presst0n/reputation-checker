@@ -9,14 +9,13 @@ using System.Threading.Tasks;
 
 namespace RepDataCollector.Core
 {
-    public class BattleNetApiRequestsHandler : IBattleNetApiRequestsHandler
+    public abstract class BattleNetApiRequestsHandler/* : IBattleNetApiRequestsHandler*/
     {
-        private const string AllUserCharactersEndpoint = "https://eu.api.blizzard.com/profile/user/wow";
+        private const string allUserCharactersEndpoint = "https://eu.api.blizzard.com/profile/user/wow";
         private const string userInfoEndpoint = "https://eu.battle.net/oauth/userinfo";
 
         private readonly RestClient _client;
         protected AuthService AuthService { get; set; }
-
         private string Access_Token { get; set; }
 
         public BattleNetApiRequestsHandler() 
@@ -29,7 +28,7 @@ namespace RepDataCollector.Core
             AuthService = new AuthService(clientId, clientSecret);
         }
 
-        public async Task<bool> AuthorizeAsync()
+        public virtual async Task<bool> AuthorizeAsync()
         {
             bool isSuccess = await AuthService.AuthorizeAsync();
 
@@ -42,7 +41,7 @@ namespace RepDataCollector.Core
             return isSuccess;
         }
 
-        public async Task<UserInfoResponse> GetUserInfoAsync()
+        public virtual async Task<UserInfoResponse> GetUserInfoAsync()
         {
             if (string.IsNullOrEmpty(Access_Token))
                 return null;
@@ -57,19 +56,19 @@ namespace RepDataCollector.Core
             return JsonConvert.DeserializeObject<UserInfoResponse>(response?.Content);
         }
 
-        public async Task ValidateAccessTokenAsync()
+        public virtual async Task ValidateAccessTokenAsync()
         {
             var result = await AuthService.ValidateTokenAsync(Access_Token);
 
             // if token is still valid, do nothing, otherwise ask to log-in again.
         }
 
-        public async Task<List<Character>> GetAllUserWowCharactersAsync()
+        public virtual async Task<List<Character>> GetAllUserWowCharactersAsync()
         {
             if (string.IsNullOrEmpty(Access_Token))
                 return null;
 
-            _client.BaseUrl = new Uri(AllUserCharactersEndpoint);
+            _client.BaseUrl = new Uri(allUserCharactersEndpoint);
             var request = new RestRequest(Method.GET);
             request.AddHeader("cache-control", "no-cache");
             request.AddHeader("content-type", "application/x-www-form-urlencoded");
@@ -86,7 +85,7 @@ namespace RepDataCollector.Core
             return characters;
         }
 
-        public async Task<List<ReputationResponse>> GetReputationsByCharactersAsync(List<Character> characters)
+        public virtual async Task<List<ReputationResponse>> GetReputationsByCharactersAsync(List<Character> characters)
         {
             if (string.IsNullOrEmpty(Access_Token))
                 return null;
@@ -115,7 +114,6 @@ namespace RepDataCollector.Core
 
             return reputations;
         }
-
     }
 }
 
