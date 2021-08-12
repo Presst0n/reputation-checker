@@ -4,8 +4,8 @@ namespace RepChecker.Settings
 {
     public interface IApplicationSettings
     {
-        TimeSpan GetDataRefreshValue();
+        TimeSpan GetDataRefreshTimeValue();
         void RestoreDefaultSettings();
-        void SetDataRefreshValue(TimeSpan timeSpan);
+        void SetDataRefreshTimeValue(TimeSpan timeSpan);
     }
 }

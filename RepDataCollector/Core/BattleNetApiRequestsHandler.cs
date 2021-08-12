@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RepDataCollector.Core
 {
-    public abstract class BattleNetApiRequestsHandler/* : IBattleNetApiRequestsHandler*/
+    public abstract class BattleNetApiRequestsHandler
     {
         private const string allUserCharactersEndpoint = "https://eu.api.blizzard.com/profile/user/wow";
         private const string userInfoEndpoint = "https://eu.battle.net/oauth/userinfo";
@@ -23,19 +23,23 @@ namespace RepDataCollector.Core
             _client = new RestClient();
         }
 
-        public BattleNetApiRequestsHandler(string clientId, string clientSecret) : this()
-        {
-            AuthService = new AuthService(clientId, clientSecret);
-        }
+        //public BattleNetApiRequestsHandler(string clientId, string clientSecret) : this()
+        //{
+        //    AuthService = new AuthService(clientId, clientSecret);
+        //}
 
         public virtual async Task<bool> AuthorizeAsync()
         {
             bool isSuccess = await AuthService.AuthorizeAsync();
 
             if (!isSuccess)
-                return isSuccess;
+                return false;
 
             var response = await AuthService.GetAccessTokenAsync();
+
+            if (string.IsNullOrEmpty(response?.Access_Token))
+                return false;
+
             Access_Token = response.Access_Token;
 
             return isSuccess;

@@ -133,6 +133,10 @@
                         <DataTrigger Binding="{Binding IsDataLoaded}" Value="True">
                             <Setter Property="Visibility" Value="Collapsed" />
                         </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IsUserLoggedIn}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Grid.Style>

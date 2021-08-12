@@ -30,7 +30,7 @@ namespace RepChecker.MVVM.ViewModel
             {
                 if (_selectedRefreshTimeSpan is null)
                 {
-                    return RefreshTimeSpan.First(x => x.RefreshmentTime == _applicationSettings.GetDataRefreshValue());
+                    return RefreshTimeSpan.First(x => x.RefreshmentTime == _applicationSettings.GetDataRefreshTimeValue());
                 }
 
                 return _selectedRefreshTimeSpan;
@@ -40,7 +40,7 @@ namespace RepChecker.MVVM.ViewModel
                 _selectedRefreshTimeSpan = value;
                 OnPropertyChanged();
 
-                _applicationSettings.SetDataRefreshValue(_selectedRefreshTimeSpan.RefreshmentTime);
+                _applicationSettings.SetDataRefreshTimeValue(_selectedRefreshTimeSpan.RefreshmentTime);
             }
         }
 

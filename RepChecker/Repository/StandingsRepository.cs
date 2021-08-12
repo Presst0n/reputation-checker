@@ -38,7 +38,7 @@ namespace RepChecker.Repository
             return true;
         }
 
-        public async Task<ApplicationUserModel> LoadDataAsync(string battleTag)
+        public async Task<ApplicationUserModel> LoadDataAsync(string battleTag, bool userDataOnly = false)
         {
             if (string.IsNullOrEmpty(battleTag))
                 return null;
@@ -48,13 +48,39 @@ namespace RepChecker.Repository
             if (_db.ApplicationUsers.Where(u => u.BattleTag == btag).Count() < 1)
                 return null;
 
-            var unmappedData = await _db.ApplicationUsers
-                .Include(u => u.UserReputations)
-                .ThenInclude(s => s.Standing)
-                .FirstOrDefaultAsync(x => x.BattleTag == btag);
+            ApplicationUserModelDto unmappedData = null;
+
+            if (userDataOnly == false)
+            {
+                unmappedData = await _db.ApplicationUsers
+                    .Include(u => u.UserReputations)
+                    .ThenInclude(s => s.Standing)
+                    .FirstOrDefaultAsync(x => x.BattleTag == btag);
+            }
+            else
+            {
+                unmappedData = await _db.ApplicationUsers
+                    .FirstOrDefaultAsync(x => x.BattleTag == btag);
+            }
 
             return _mapper.Map<ApplicationUserModel>(unmappedData);
         }
+
+        //public async Task<ApplicationUserModel> LoadDataAsync(string battleTag, bool userDataOnly = false)
+        //{
+        //    if (string.IsNullOrEmpty(battleTag))
+        //        return null;
+
+        //    var btag = battleTag.Trim();
+
+        //    if (_db.ApplicationUsers.Where(u => u.BattleTag == btag).Count() < 1)
+        //        return null;
+
+        //    var unmappedData = await _db.ApplicationUsers
+        //        .FirstOrDefaultAsync(x => x.BattleTag == btag);
+
+        //    return _mapper.Map<ApplicationUserModel>(unmappedData);
+        //}
 
         public async Task<bool> UpdateDataAsync(ApplicationUserModel userModel)
         {

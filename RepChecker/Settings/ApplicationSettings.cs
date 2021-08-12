@@ -7,14 +7,12 @@ namespace RepChecker.Settings
     public class ApplicationSettings : IApplicationSettings
     {
 
-        public TimeSpan GetDataRefreshValue()
+        public TimeSpan GetDataRefreshTimeValue()
         {
-            var value = Properties.Settings.Default.DataRefresh;
-
-            return value;
+            return Properties.Settings.Default.DataRefresh;
         }
 
-        public void SetDataRefreshValue(TimeSpan timeSpan)
+        public void SetDataRefreshTimeValue(TimeSpan timeSpan)
         {
             Properties.Settings.Default.DataRefresh = timeSpan;
             Properties.Settings.Default.Save();

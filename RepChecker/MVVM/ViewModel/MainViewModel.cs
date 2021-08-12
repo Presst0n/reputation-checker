@@ -19,6 +19,8 @@ namespace RepChecker.MVVM.ViewModel
         private LoggedInUserModel _loggedInUserModel;
 
         public event EventHandler<string> OnReputationFilter;
+        public event EventHandler<bool> OnUserLogIn;
+        public event EventHandler OnLogOut;
 
         public MainViewModel(IWindowFactory windowFactory, LoggedInUserModel loggedInUser, IApiService apiService)
         {
@@ -41,6 +43,7 @@ namespace RepChecker.MVVM.ViewModel
         }
 
         public ReputationViewModel ReputationVM { get; set; }
+
         public SettingsViewModel SettingsVM { get; set; }
 
         public ViewModelBase CurrentView
@@ -78,15 +81,18 @@ namespace RepChecker.MVVM.ViewModel
             }
         }
 
+        private string _loggedInUserName;
+
         public string LoggedInUserName
         {
             get
             {
-                return $"Hello {LoggedInUserModel.BattleTag}!";
+                return _loggedInUserName;
             }
             set
             {
-                LoggedInUserModel.BattleTag = value;
+
+                _loggedInUserName = value != null ? $"Hello {value}" : null;
                 OnPropertyChanged();
             }
         }
@@ -110,9 +116,13 @@ namespace RepChecker.MVVM.ViewModel
 
             var userResponse = AsyncContext.Run(() => _apiService.GetUserInfoAsync());
 
+            if (string.IsNullOrEmpty(userResponse.BattleTag))
+                return;
+
             LoggedInUserName = userResponse.BattleTag;
             IsUserLoggedIn = true;
 
+            OnUserLogIn?.Invoke(this, true);
             OnPropertyChanged();
         });
 
@@ -127,7 +137,11 @@ namespace RepChecker.MVVM.ViewModel
             if (CurrentView == ReputationVM)
                 return;
 
-            Task.Run(async () => await ReputationVM.LoadReputations());
+            if (_loggedInUserModel.IsLoggedIn)
+            {
+                Task.Run(async () => await ReputationVM.LoadReputations());
+            }
+
 
             CurrentView = ReputationVM;
 
@@ -149,11 +163,6 @@ namespace RepChecker.MVVM.ViewModel
 
         public ICommand ShowExaltedReputations => new RelayCommand<string>(mode =>
         {
-            //if (ReputationVM?.ReputationsCollection is null)
-            //    return;
-            //var filteredCollection = ReputationVM?.ReputationsCollection.Where(x => x.Standing.Level == "Exalted").ToObservableCollection();
-            //ReputationVM.TestModels = filteredCollection;
-
             OnReputationFilter?.Invoke(this, "Exalted");
 
             OnPropertyChanged();
@@ -205,6 +214,19 @@ namespace RepChecker.MVVM.ViewModel
         {
             OnReputationFilter?.Invoke(this, "Hated");
 
+            OnPropertyChanged();
+        });
+
+        public ICommand LogOut => new RelayCommand<string>(mode =>
+        {
+            // Bind this property with UI.
+            CurrentView = null;
+            ReputationVM = null;
+            SettingsVM = null;
+            _loggedInUserModel.BattleTag = null;
+            _loggedInUserModel.IsLoggedIn = false;
+            LoggedInUserName = null;
+            OnLogOut?.Invoke(this, EventArgs.Empty);
             OnPropertyChanged();
         });
 

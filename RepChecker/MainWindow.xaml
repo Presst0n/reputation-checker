@@ -71,6 +71,16 @@
                         Grid.Row="1" 
                         Grid.Column="1">
 
+                <Button x:Name="LogOut"
+                        Content="Log out" Margin="0,0,150,0" 
+                        Width="50"
+                        Height="35"                     
+                        Foreground="#fff" 
+                        FontSize="12"
+                        Command="{Binding LogOut}"
+                        Style="{StaticResource HorizontalButtonTheme}"/>
+
+
                 <Button x:Name="SignIn"
                         Content="Sign in with Battle.net" Margin="0,0,0,0" 
                         Width="190"
@@ -165,7 +175,6 @@
                                              Height="50"
                                              FontSize="14"
                                              x:Name="ReputationsButton"
-                                             IsEnabled="{Binding IsUserLoggedIn}"
                                              Style="{StaticResource MenuButtonTheme}"
                                              Command="{Binding DisplayReputationPage}">
                     <RadioButton.Triggers>

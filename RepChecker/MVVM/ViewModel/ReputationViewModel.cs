@@ -1,29 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Nito.AsyncEx;
-using RepChecker.Core;
-using RepChecker.Data;
-using RepChecker.DtoModels;
-using RepChecker.Enums;
-using RepChecker.EventModels;
+﻿using RepChecker.Core;
 using RepChecker.Extensions;
+using RepChecker.Helpers;
 using RepChecker.MVVM.Model;
 using RepChecker.Repository;
 using RepChecker.Services;
 using RepChecker.Settings;
-using RepDataCollector.Core;
 using RepDataCollector.Models.Responses;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RepChecker.MVVM.ViewModel
 {
-    public class ReputationViewModel : ViewModelBase
+    public class ReputationViewModel : ViewModelBase, IDisposable
     {
         private const string Exalted = "Exalted";
         private const string Revered = "Revered";
@@ -46,7 +38,8 @@ namespace RepChecker.MVVM.ViewModel
         private readonly IApplicationSettings _userAppSettings;
         private readonly IMainViewModel _mainViewModel;
 
-        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, IApplicationSettings userAppSettings, IMainViewModel mainViewModel)
+        public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, 
+            IApplicationSettings userAppSettings, IMainViewModel mainViewModel)
         {
             _apiService = apiService;
             _standingsRepository = standingsRepository;
@@ -54,23 +47,40 @@ namespace RepChecker.MVVM.ViewModel
             _userAppSettings = userAppSettings;
             _mainViewModel = mainViewModel;
 
-            _mainViewModel.OnReputationFilter += (obj, e) => 
-            {
-                ChosenReputationLvl = e;
-
-                if (ReputationsCollection is null)
-                    return;
-
-                var filteredCollection = ReputationsCollection.Where(x => x.Standing.Level == e).ToObservableCollection();
-                TestModels = filteredCollection;
-            };
+            IsUserLoggedIn = _loggedInUser.IsLoggedIn;
+            _mainViewModel.OnReputationFilter += OnReputationFilter;
+            _mainViewModel.OnUserLogIn += OnUserLogIn;
+            _mainViewModel.OnLogOut += OnLogOut;
         }
 
+        private void OnLogOut(object sender, EventArgs e)
+        {
+            // 
+        }
+
+        // TODO: Add logging off feat
         // TODO: Implement changing colors in app based on chosen theme by user.
         // TODO: Create general validation, so that user will get notified when some functions of applications are not available for some reason or error occured.
         // TODO: Need to implement logging to file (maybe .txt) system . I will prolly use some well written and respected 3rd party library (nlog/serilog?).
 
-        public string ChosenReputationLvl { get; set; }
+        public ApplicationUserModel AppUserModel { get; private set; }
+
+        private bool _isUserLoggedIn;
+
+        public bool IsUserLoggedIn 
+        { 
+            get
+            {
+                return _isUserLoggedIn;
+            }
+            set
+            {
+                _isUserLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SelectedReputationLvl { get; set; }
 
         private string _searchText;
 
@@ -89,12 +99,12 @@ namespace RepChecker.MVVM.ViewModel
                 /*_reputationsCollection.Where(e => e.Standing.Level == TestModels.FirstOrDefault()?.Standing.Level);*/
                 if (_searchText == "")
                 {
-                    TestModels = _reputationsCollection.Where(e => e.Standing.Level == ChosenReputationLvl).ToObservableCollection();
+                    TestModels = _reputationsCollection.Where(e => e.Standing.Level == SelectedReputationLvl).ToObservableCollection();
                     OnPropertyChanged();
                     return;
                 }
 
-                var filteredData = _reputationsCollection.Where(e => e.Standing.Level == ChosenReputationLvl).Where(x => x.ReputationName.ToLowerInvariant().Contains(_searchText)).ToObservableCollection(); 
+                var filteredData = _reputationsCollection.Where(e => e.Standing.Level == SelectedReputationLvl).Where(x => x.ReputationName.ToLowerInvariant().Contains(_searchText)).ToObservableCollection(); 
 
                 TestModels = filteredData;
                 OnPropertyChanged();
@@ -106,7 +116,7 @@ namespace RepChecker.MVVM.ViewModel
             get => _reputationsNumber;
             set 
             {
-                _reputationsNumber = value == null ? "0" : value;
+                _reputationsNumber = value ?? "0";  // value == null ? "0" : value;
                 OnPropertyChanged();
             }
         }
@@ -140,6 +150,27 @@ namespace RepChecker.MVVM.ViewModel
                 ReputationsNumber = _testModels?.Count.ToString();
                 OnPropertyChanged();
             }
+        }
+
+        private async void OnUserLogIn(object sender, bool e)
+        {
+            IsUserLoggedIn = e;
+
+            if (e)
+            {
+                await LoadReputations();
+            }
+        }
+
+        private void OnReputationFilter(object sender, string e)
+        {
+            SelectedReputationLvl = e;
+
+            if (ReputationsCollection is null)
+                return;
+
+            var filteredCollection = ReputationsCollection.Where(x => x.Standing.Level == e).ToObservableCollection();
+            TestModels = filteredCollection;
         }
 
         public ICommand SortInAlphabeticalOrder => new RelayCommand<string>(mode =>
@@ -199,7 +230,7 @@ namespace RepChecker.MVVM.ViewModel
             return reps;
         }
 
-        private async Task<List<ReputationModel>> LoadReputationsDataFromApi()
+        private async Task<List<ReputationModel>> LoadNewReputations()
         {
             var characters = await _apiService.GetAllUserWowCharactersAsync();
             if (characters is null)
@@ -212,32 +243,23 @@ namespace RepChecker.MVVM.ViewModel
 
             var unfilteredReputations = MapReputationsData(repResponses);
             var filteredReputations = FilterReputations(unfilteredReputations);
-            //await GetFactionNames(filteredReputations);
 
             return filteredReputations;
         }
 
-        private int GenerateId()
-        {
-            // Extract this into extension method.
-            var now = DateTime.Now;
-            var zeroDate = DateTime.MinValue.AddHours(now.Hour).AddMinutes(now.Minute).AddSeconds(now.Second).AddMilliseconds(now.Millisecond);
-            int uniqueId = (int)(zeroDate.Ticks / 10000);
-
-            return uniqueId;
-        }
-
         public async Task LoadReputations()
         {
-            // Check if reputations of this user exist in database and if so, check if they are older than x hrs. 
-            // If that's false then load them instead requesting API. Otherwise get new data from api. 
-
-
-            var data = await _standingsRepository.LoadDataAsync(_loggedInUser.BattleTag);
-
-            if (data is null)
+            if (ReputationsCollection != null)
             {
-                var reps = await LoadReputationsDataFromApi();
+                if (DateTime.Now < DateTime.Parse(AppUserModel.LastUpdate).Add(_userAppSettings.GetDataRefreshTimeValue()))
+                    return;
+            }
+
+            AppUserModel = await _standingsRepository.LoadDataAsync(_loggedInUser.BattleTag);
+
+            if (AppUserModel is null)
+            {
+                var reps = await LoadNewReputations();
 
                 if (reps is null)
                     return;
@@ -249,7 +271,7 @@ namespace RepChecker.MVVM.ViewModel
                     await _standingsRepository.SaveDataAsync(new ApplicationUserModel()
                     {
                         BattleTag = _loggedInUser?.BattleTag,
-                        Id = GenerateId(),
+                        Id = IdGenerator.GenerateId(),
                         UserReputations = reps,
                         LastUpdate = DateTime.UtcNow.ToLocalTime().ToString()
                     });
@@ -257,17 +279,17 @@ namespace RepChecker.MVVM.ViewModel
                 catch (Exception ex)
                 {
                     // display some modal box or red bar with error text in UI.
+                    // "Something went wrong during saving data in database. To get more details check logs."
                     throw ex;
                 }
 
-                IsDataLoaded = true;
-                OnLoadingReputationsCompleted?.Invoke(this, true);
+                NotifyIfLoaded(true);
                 return;
             }
 
-            if (DateTime.Now >= DateTime.Parse(data.LastUpdate).Add(_userAppSettings.GetDataRefreshValue()))
+            if (DateTime.Now >= DateTime.Parse(AppUserModel.LastUpdate).Add(_userAppSettings.GetDataRefreshTimeValue()))
             {
-                var reps = await LoadReputationsDataFromApi();
+                var reps = await LoadNewReputations();
                 ReputationsCollection = reps;
 
                 await _standingsRepository.UpdateDataAsync(new ApplicationUserModel()
@@ -277,15 +299,19 @@ namespace RepChecker.MVVM.ViewModel
                     UserReputations = reps
                 });
 
-                IsDataLoaded = true;
-                OnLoadingReputationsCompleted?.Invoke(this, true);
+                NotifyIfLoaded(true);
                 return;
             }
 
-            ReputationsCollection = data.UserReputations;
+            ReputationsCollection = AppUserModel.UserReputations;
 
-            IsDataLoaded = true;
-            OnLoadingReputationsCompleted?.Invoke(this, true);
+            NotifyIfLoaded(true);
+        }
+
+        private void NotifyIfLoaded(bool isLoaded)
+        {
+            IsDataLoaded = isLoaded;
+            OnLoadingReputationsCompleted?.Invoke(this, isLoaded);
         }
 
         private List<ReputationModel> FilterReputations(List<ReputationModel> unfilteredReputations)
@@ -376,6 +402,12 @@ namespace RepChecker.MVVM.ViewModel
             });
 
             return uniqueReputations;
+        }
+
+        public void Dispose()
+        {
+            _mainViewModel.OnReputationFilter -= OnReputationFilter;
+            _mainViewModel.OnUserLogIn -= OnUserLogIn;
         }
     }
 }

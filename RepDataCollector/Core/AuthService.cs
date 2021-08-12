@@ -91,8 +91,7 @@ namespace RepDataCollector.Core
                 //output(String.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
                 return false;
             }
-            if (context.Request.QueryString.Get("code") == null
-                || context.Request.QueryString.Get("state") == null)
+            if (context.Request.QueryString.Get("code") == null || context.Request.QueryString.Get("state") == null)
             {
                 //output("Malformed authorization response. " + context.Request.QueryString);
                 return false;
