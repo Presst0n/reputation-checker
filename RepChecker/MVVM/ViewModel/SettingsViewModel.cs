@@ -13,6 +13,8 @@ namespace RepChecker.MVVM.ViewModel
     {
         private readonly IApplicationSettings _applicationSettings;
 
+        //private const string Exalted = "Exalted";
+
         public List<RefreshTimeModel> RefreshTimeSpan { get; set; } = new List<RefreshTimeModel>()
         {
             new RefreshTimeModel() { Name = "30 min", Id = 1, RefreshmentTime = TimeSpan.FromMinutes(30)},
@@ -21,6 +23,10 @@ namespace RepChecker.MVVM.ViewModel
             new RefreshTimeModel() { Name = "3hrs", Id = 4, RefreshmentTime = TimeSpan.FromMinutes(180)}
         };
 
+        ~SettingsViewModel()
+        {
+
+        }
 
         private RefreshTimeModel _selectedRefreshTimeSpan;
 
@@ -39,7 +45,7 @@ namespace RepChecker.MVVM.ViewModel
             {
                 _selectedRefreshTimeSpan = value;
                 OnPropertyChanged();
-
+                //var testttorro = Exalted;
                 _applicationSettings.SetDataRefreshTimeValue(_selectedRefreshTimeSpan.RefreshmentTime);
             }
         }

@@ -15,20 +15,11 @@ using System.Windows.Input;
 
 namespace RepChecker.MVVM.ViewModel
 {
-    public class ReputationViewModel : ViewModelBase, IDisposable
+    public class ReputationViewModel : ViewModelBase
     {
-        private const string Exalted = "Exalted";
-        private const string Revered = "Revered";
-        private const string Honored = "Honored";
-        private const string Friendly = "Friendly";
-        private const string Neutral = "Neutral";
-        private const string Unfriendly = "Unfriendly";
-        private const string Hostile = "Hostile";
-        private const string Hated = "Hated";
-
         public event EventHandler<bool> OnLoadingReputationsCompleted;
 
-        private readonly LoggedInUserModel _loggedInUser;
+        private LoggedInUserModel _loggedInUser;
         private ObservableCollection<ReputationModel> _testModels;
         private readonly IApiService _apiService;
         private List<ReputationModel> _reputationsCollection;
@@ -36,7 +27,12 @@ namespace RepChecker.MVVM.ViewModel
         private bool _isDataLoaded;
         private string _reputationsNumber;
         private readonly IApplicationSettings _userAppSettings;
-        private readonly IMainViewModel _mainViewModel;
+        private IMainViewModel _mainViewModel;
+
+        ~ReputationViewModel()
+        {
+
+        }
 
         public ReputationViewModel(IApiService apiService, IStandingsRepository standingsRepository, LoggedInUserModel loggedInUser, 
             IApplicationSettings userAppSettings, IMainViewModel mainViewModel)
@@ -55,7 +51,12 @@ namespace RepChecker.MVVM.ViewModel
 
         private void OnLogOut(object sender, EventArgs e)
         {
-            // 
+            _mainViewModel.OnReputationFilter -= OnReputationFilter;
+            _mainViewModel.OnUserLogIn -= OnUserLogIn;
+            _mainViewModel.OnLogOut -= OnLogOut;
+            //_loggedInUser = null;
+            //_mainViewModel = null;
+            //_testModels = null;
         }
 
         // TODO: Add logging off feat
@@ -351,46 +352,46 @@ namespace RepChecker.MVVM.ViewModel
 
             foreach (var rep in uniqueReputations)
             {
-                if (rep.Standing.Level != Exalted && unfilteredReputations.Exists(r => r.Standing.Level == Exalted && r.ReputationId == rep.ReputationId))
+                if (rep.Standing.Level != "Exalted" && unfilteredReputations.Exists(r => r.Standing.Level == "Exalted" && r.ReputationId == rep.ReputationId))
                 {
                     repsToRemove.Add(rep);
                 }
 
-                if (rep.Standing.Level != Revered && rep.Standing.Level != Exalted && unfilteredReputations.Exists(r => r.Standing.Level == Revered && r.ReputationId == rep.ReputationId))
+                if (rep.Standing.Level != "Revered" && rep.Standing.Level != "Exalted" && unfilteredReputations.Exists(r => r.Standing.Level == "Revered" && r.ReputationId == rep.ReputationId))
                 {
                     repsToRemove.Add(rep);
                 }
 
-                if (rep.Standing.Level != Revered && rep.Standing.Level != Exalted && unfilteredReputations.Exists(r => r.Standing.Level == Revered && r.ReputationId == rep.ReputationId))
+                //if (rep.Standing.Level != Revered && rep.Standing.Level != Exalted && unfilteredReputations.Exists(r => r.Standing.Level == Revered && r.ReputationId == rep.ReputationId))
+                //{
+                //    repsToRemove.Add(rep);
+                //}
+
+                if (rep.Standing.Level != "Honored" && rep.Standing.Level != "Exalted" && rep.Standing.Level != "Revered" && unfilteredReputations.Exists(r => r.Standing.Level == "Honored" && r.ReputationId == rep.ReputationId))
                 {
                     repsToRemove.Add(rep);
                 }
 
-                if (rep.Standing.Level != Honored && rep.Standing.Level != Exalted && rep.Standing.Level != Revered && unfilteredReputations.Exists(r => r.Standing.Level == Honored && r.ReputationId == rep.ReputationId))
+                if (rep.Standing.Level != "Friendly" && rep.Standing.Level != "Exalted" && rep.Standing.Level != "Revered" && rep.Standing.Level != "Honored"
+                    && unfilteredReputations.Exists(r => r.Standing.Level == "Friendly" && r.ReputationId == rep.ReputationId))
                 {
                     repsToRemove.Add(rep);
                 }
 
-                if (rep.Standing.Level != Friendly && rep.Standing.Level != Exalted && rep.Standing.Level != Revered && rep.Standing.Level != Honored
-                    && unfilteredReputations.Exists(r => r.Standing.Level == Friendly && r.ReputationId == rep.ReputationId))
+                if (rep.Standing.Level != "Neutral" && rep.Standing.Level != "Friendly" && rep.Standing.Level != "Exalted" && rep.Standing.Level != "Revered" && rep.Standing.Level != "Honored"
+                    && unfilteredReputations.Exists(r => r.Standing.Level == "Neutral" && r.ReputationId == rep.ReputationId))
                 {
                     repsToRemove.Add(rep);
                 }
 
-                if (rep.Standing.Level != Neutral && rep.Standing.Level != Friendly && rep.Standing.Level != Exalted && rep.Standing.Level != Revered && rep.Standing.Level != Honored
-                    && unfilteredReputations.Exists(r => r.Standing.Level == Neutral && r.ReputationId == rep.ReputationId))
+                if (rep.Standing.Level != "Unfriendly" && rep.Standing.Level != "Neutral" && rep.Standing.Level != "Friendly" && rep.Standing.Level != "Exalted" && rep.Standing.Level != "Revered"
+                    && rep.Standing.Level != "Honored" && unfilteredReputations.Exists(r => r.Standing.Level == "Unfriendly" && r.ReputationId == rep.ReputationId))
                 {
                     repsToRemove.Add(rep);
                 }
 
-                if (rep.Standing.Level != Unfriendly && rep.Standing.Level != Neutral && rep.Standing.Level != Friendly && rep.Standing.Level != Exalted && rep.Standing.Level != Revered
-                    && rep.Standing.Level != Honored && unfilteredReputations.Exists(r => r.Standing.Level == Unfriendly && r.ReputationId == rep.ReputationId))
-                {
-                    repsToRemove.Add(rep);
-                }
-
-                if (rep.Standing.Level != Hostile && rep.Standing.Level != Unfriendly && rep.Standing.Level != Neutral && rep.Standing.Level != Friendly && rep.Standing.Level != Exalted
-                    && rep.Standing.Level != Revered && rep.Standing.Level != Honored && unfilteredReputations.Exists(r => r.Standing.Level == Hostile && r.ReputationId == rep.ReputationId))
+                if (rep.Standing.Level != "Hostile" && rep.Standing.Level != "Unfriendly" && rep.Standing.Level != "Neutral" && rep.Standing.Level != "Friendly" && rep.Standing.Level != "Exalted"
+                    && rep.Standing.Level != "Revered" && rep.Standing.Level != "Honored" && unfilteredReputations.Exists(r => r.Standing.Level == "Hostile" && r.ReputationId == rep.ReputationId))
                 {
                     repsToRemove.Add(rep);
                 }
@@ -404,10 +405,10 @@ namespace RepChecker.MVVM.ViewModel
             return uniqueReputations;
         }
 
-        public void Dispose()
-        {
-            _mainViewModel.OnReputationFilter -= OnReputationFilter;
-            _mainViewModel.OnUserLogIn -= OnUserLogIn;
-        }
+        //public void Dispose()
+        //{
+        //    _mainViewModel.OnReputationFilter -= OnReputationFilter;
+        //    _mainViewModel.OnUserLogIn -= OnUserLogIn;
+        //}
     }
 }

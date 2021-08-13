@@ -47,22 +47,18 @@ namespace RepChecker
             return services.BuildServiceProvider();
         }
 
-
         private ServiceCollection AddDependencies(ServiceCollection services)
         {
-            //var apiClient = ConfigureApiClient();
-
-            services.AddSingleton(this);
-            services.AddScoped<LoggedInUserModel>();
+            services.AddSingleton<LoggedInUserModel>();
             services.AddScoped<IApplicationSettings, ApplicationSettings>();
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<MainWindow>();
             services.AddScoped<TestView>();
-            services.AddScoped<SettingsView>();
-            services.AddScoped<SettingsViewModel>();
-            services.AddScoped<IWindowFactory, WindowFactory>();
+            services.AddTransient<SettingsView>();
+            services.AddTransient<SettingsViewModel>();
+            services.AddTransient<IWindowFactory, WindowFactory>();
             services.AddScoped<IMainViewModel, MainViewModel>();
-            services.AddScoped<ReputationViewModel>();
+            services.AddTransient<ReputationViewModel>();
             services.AddScoped<IStandingsRepository, StandingsRepository>();
 
             //services.AddDbContext<ReputationDbContext>(options => 

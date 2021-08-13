@@ -19,10 +19,9 @@ namespace RepChecker.MVVM.View
     /// </summary>
     public partial class ReputationView : UserControl
     {
-        public ReputationView(/*ReputationViewModel reputationViewModel*/)
+        public ReputationView()
         {
             InitializeComponent();
-            //DataContext = reputationViewModel;
         }
     }
 }

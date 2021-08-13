@@ -176,7 +176,8 @@
                                              FontSize="14"
                                              x:Name="ReputationsButton"
                                              Style="{StaticResource MenuButtonTheme}"
-                                             Command="{Binding DisplayReputationPage}">
+                                             Command="{Binding DisplayReputationPage}"
+                                             IsChecked="{Binding IsReputationsDropDownVisible}">
                     <RadioButton.Triggers>
 
 

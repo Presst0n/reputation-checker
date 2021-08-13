@@ -1,11 +1,9 @@
 ﻿using Nito.AsyncEx;
 using RepChecker.Core;
-using RepChecker.Extensions;
 using RepChecker.Interfaces;
 using RepChecker.MVVM.Model;
 using RepChecker.Services;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -31,6 +29,21 @@ namespace RepChecker.MVVM.ViewModel
 
         public Action Close { get; set; }
         public Action Minimize { get; set; }
+
+        private bool _isReputationsDropDownVisible;
+
+        public bool IsReputationsDropDownVisible
+        {
+            get 
+            { 
+                return _isReputationsDropDownVisible; 
+            }
+            set 
+            { 
+                _isReputationsDropDownVisible = value;
+                OnPropertyChanged();
+            }
+        }
 
         public LoggedInUserModel LoggedInUserModel
         {
@@ -91,7 +104,6 @@ namespace RepChecker.MVVM.ViewModel
             }
             set
             {
-
                 _loggedInUserName = value != null ? $"Hello {value}" : null;
                 OnPropertyChanged();
             }
@@ -119,6 +131,7 @@ namespace RepChecker.MVVM.ViewModel
             if (string.IsNullOrEmpty(userResponse.BattleTag))
                 return;
 
+            _loggedInUserModel.BattleTag = userResponse.BattleTag;
             LoggedInUserName = userResponse.BattleTag;
             IsUserLoggedIn = true;
 
@@ -131,7 +144,7 @@ namespace RepChecker.MVVM.ViewModel
             if (ReputationVM is null)
             {
                 ReputationVM = _windowFactory.GetViewModel<ReputationViewModel>();
-                ReputationVM.OnLoadingReputationsCompleted += (obj, e) => { RepButtonVisible = e; };
+                ReputationVM.OnLoadingReputationsCompleted += ReputationVM_OnLoadingReputationsCompleted;
             }
 
             if (CurrentView == ReputationVM)
@@ -142,11 +155,15 @@ namespace RepChecker.MVVM.ViewModel
                 Task.Run(async () => await ReputationVM.LoadReputations());
             }
 
-
             CurrentView = ReputationVM;
 
             OnPropertyChanged();
         });
+
+        private void ReputationVM_OnLoadingReputationsCompleted(object sender, bool e)
+        {
+            RepButtonVisible = e;
+        }
 
         public ICommand DisplaySettingsPage => new RelayCommand<string>(mode =>
         {
@@ -219,14 +236,20 @@ namespace RepChecker.MVVM.ViewModel
 
         public ICommand LogOut => new RelayCommand<string>(mode =>
         {
-            // Bind this property with UI.
+            // TODO: Clean up this later.
+
+            RepButtonVisible = false;
+            IsReputationsDropDownVisible = false;
+            OnLogOut?.Invoke(this, EventArgs.Empty);
+            ReputationVM.OnLoadingReputationsCompleted -= ReputationVM_OnLoadingReputationsCompleted;
             CurrentView = null;
             ReputationVM = null;
             SettingsVM = null;
             _loggedInUserModel.BattleTag = null;
             _loggedInUserModel.IsLoggedIn = false;
+            IsUserLoggedIn = false;
             LoggedInUserName = null;
-            OnLogOut?.Invoke(this, EventArgs.Empty);
+
             OnPropertyChanged();
         });
 

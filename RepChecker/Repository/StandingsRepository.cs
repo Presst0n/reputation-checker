@@ -66,22 +66,6 @@ namespace RepChecker.Repository
             return _mapper.Map<ApplicationUserModel>(unmappedData);
         }
 
-        //public async Task<ApplicationUserModel> LoadDataAsync(string battleTag, bool userDataOnly = false)
-        //{
-        //    if (string.IsNullOrEmpty(battleTag))
-        //        return null;
-
-        //    var btag = battleTag.Trim();
-
-        //    if (_db.ApplicationUsers.Where(u => u.BattleTag == btag).Count() < 1)
-        //        return null;
-
-        //    var unmappedData = await _db.ApplicationUsers
-        //        .FirstOrDefaultAsync(x => x.BattleTag == btag);
-
-        //    return _mapper.Map<ApplicationUserModel>(unmappedData);
-        //}
-
         public async Task<bool> UpdateDataAsync(ApplicationUserModel userModel)
         {
             if (userModel is null)
