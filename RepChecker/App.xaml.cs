@@ -1,20 +1,15 @@
-﻿using RepDataCollector.Core;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using RepChecker.Core;
-using RepChecker.Helpers;
 using RepChecker.MVVM.Model;
 using RepChecker.MVVM.View;
 using RepChecker.MVVM.ViewModel;
 using System;
-using System.Configuration;
 using System.Windows;
 using RepChecker.Data;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using System.Reflection;
 using RepChecker.Repository;
 using RepChecker.Services;
 using RepChecker.Settings;
+using Microsoft.Extensions.Hosting;
 
 namespace RepChecker
 {
@@ -23,61 +18,64 @@ namespace RepChecker
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            // Find out if I should use IHost Builder https://www.youtube.com/watch?v=XW_qgbUg1ZI (Video title: Adding Dependency Injection to WPF applications)
+        private readonly IHost _host;
 
-            IServiceProvider serviceProvider = CreateServiceProvider();
-            var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
+        public App()
+        {
+            _host = Host.CreateDefaultBuilder()
+                .ConfigureServices((context, services) =>
+                {
+                    ConfigureServices(services);
+                }).Build();
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<LoggedInUserModel>();
+            services.AddScoped<IStandingsRepository, StandingsRepository>();
+            services.AddScoped<IApplicationSettings, ApplicationSettings>();
+            services.AddScoped<IApiService, ApiService>();
+            services.AddScoped<MainWindow>();
+            services.AddScoped<IMainViewModel, MainViewModel>();
+
+            services.AddTransient<SettingsView>();
+            services.AddTransient<SettingsViewModel>();
+            services.AddTransient<IWindowFactory, WindowFactory>();
+            services.AddTransient<ReputationViewModel>();
+
+            services.AddDbContext<ReputationDbContext>(ServiceLifetime.Scoped);
+
+            services.AddAutoMapper(typeof(App));
+        }
+
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            MainWindow mainWindow = _host.Services.GetRequiredService<MainWindow>();
 
             try
             {
-                mainWindow.DataContext = serviceProvider.GetRequiredService<IMainViewModel>();
+                mainWindow.DataContext = _host.Services.GetRequiredService<IMainViewModel>();
                 mainWindow.Show();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"{ex.Message}");
             }
+
+            await _host.StartAsync();
+
+            base.OnStartup(e);
         }
 
-        private IServiceProvider CreateServiceProvider()
+        protected override async void OnExit(ExitEventArgs e)
         {
-            var services = AddDependencies(new ServiceCollection());
-            return services.BuildServiceProvider();
+            using (_host)
+            {
+                await _host.StopAsync();
+            }
+
+            base.OnExit(e);
         }
 
-        private ServiceCollection AddDependencies(ServiceCollection services)
-        {
-            services.AddSingleton<LoggedInUserModel>();
-            services.AddScoped<IApplicationSettings, ApplicationSettings>();
-            services.AddScoped<IApiService, ApiService>();
-            services.AddScoped<MainWindow>();
-            services.AddScoped<TestView>();
-            services.AddTransient<SettingsView>();
-            services.AddTransient<SettingsViewModel>();
-            services.AddTransient<IWindowFactory, WindowFactory>();
-            services.AddScoped<IMainViewModel, MainViewModel>();
-            services.AddTransient<ReputationViewModel>();
-            services.AddScoped<IStandingsRepository, StandingsRepository>();
-
-            //services.AddDbContext<ReputationDbContext>(options => 
-            //{
-            //    options.UseSqlite("Data Source = reputations.db");
-            //});
-
-            //var config = new MapperConfiguration(cfg =>
-            //{
-            //    cfg.AddMaps(Assembly.GetExecutingAssembly());
-            //});
-            //IMapper mapper = new Mapper(config);
-
-            services.AddDbContext<ReputationDbContext>(ServiceLifetime.Scoped);
-            //services.AddSingleton(mapper);
-            services.AddAutoMapper(typeof(App));
-
-
-            return services;
-        }
     }
 }
