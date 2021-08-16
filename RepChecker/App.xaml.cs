@@ -10,6 +10,9 @@ using RepChecker.Repository;
 using RepChecker.Services;
 using RepChecker.Settings;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace RepChecker
 {
@@ -23,24 +26,31 @@ namespace RepChecker
         public App()
         {
             _host = Host.CreateDefaultBuilder()
+                .UseSerilog((host, LoggerConfiguration) =>
+                {
+                    LoggerConfiguration.WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+                    .MinimumLevel.Error();
+                })
                 .ConfigureServices((context, services) =>
                 {
                     ConfigureServices(services);
-                }).Build();
+                })
+                .Build();
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<LoggedInUserModel>();
+
             services.AddScoped<IStandingsRepository, StandingsRepository>();
             services.AddScoped<IApplicationSettings, ApplicationSettings>();
             services.AddScoped<IApiService, ApiService>();
             services.AddScoped<MainWindow>();
             services.AddScoped<IMainViewModel, MainViewModel>();
 
+            services.AddTransient<IWindowFactory, WindowFactory>();
             services.AddTransient<SettingsView>();
             services.AddTransient<SettingsViewModel>();
-            services.AddTransient<IWindowFactory, WindowFactory>();
             services.AddTransient<ReputationViewModel>();
 
             services.AddDbContext<ReputationDbContext>(ServiceLifetime.Scoped);

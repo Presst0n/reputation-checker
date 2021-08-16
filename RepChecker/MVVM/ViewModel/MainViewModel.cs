@@ -3,6 +3,7 @@ using RepChecker.Core;
 using RepChecker.Interfaces;
 using RepChecker.MVVM.Model;
 using RepChecker.Services;
+using Serilog;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,12 +20,15 @@ namespace RepChecker.MVVM.ViewModel
         public event EventHandler<string> OnReputationFilter;
         public event EventHandler<bool> OnUserLogIn;
         public event EventHandler OnLogOut;
+        //private readonly ILogger<MainViewModel> _mainViewModelLogger;
+        private readonly ILogger _logger;
 
-        public MainViewModel(IWindowFactory windowFactory, LoggedInUserModel loggedInUser, IApiService apiService)
+        public MainViewModel(IWindowFactory windowFactory, LoggedInUserModel loggedInUser, IApiService apiService, ILogger logger)
         {
             LoggedInUserModel = loggedInUser;
             _apiService = apiService;
             _windowFactory = windowFactory;
+            _logger = logger;
         }
 
         public Action Close { get; set; }
@@ -135,6 +139,8 @@ namespace RepChecker.MVVM.ViewModel
             LoggedInUserName = userResponse.BattleTag;
             IsUserLoggedIn = true;
 
+            _logger.Information("Logging to application completed successfully");
+
             OnUserLogIn?.Invoke(this, true);
             OnPropertyChanged();
         });
@@ -241,6 +247,7 @@ namespace RepChecker.MVVM.ViewModel
             RepButtonVisible = false;
             IsReputationsDropDownVisible = false;
             OnLogOut?.Invoke(this, EventArgs.Empty);
+            // null-check
             ReputationVM.OnLoadingReputationsCompleted -= ReputationVM_OnLoadingReputationsCompleted;
             CurrentView = null;
             ReputationVM = null;
